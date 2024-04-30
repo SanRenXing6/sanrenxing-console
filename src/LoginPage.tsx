@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './asset/logo.png';
 import './asset/login.css';
+import { request } from './AxiosHelper';
 
 const LoginPage: React.FC = () => {
 
@@ -8,22 +9,17 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = React.useState('');
 
     const login = () => {
-        console.log(userName)
-        fetch('http://localhost:8080/login', {
-            method: 'POST',
-            body: JSON.stringify({
-                username: userName,
+        request("POST",
+            "/login",
+            {
+                username: userName, 
                 password: password
-            }),
-            headers: {
-                'Content-type': 'application/json'
-            }
-        })
-            .then((response) => response.json())
-            .then((data) => console.log(data))
-            .catch(error => {
-                console.log("error")
             })
+            .then((response) => {
+                console.log(response)
+            }).catch((error) => {
+                console.log(error)
+            });
     }
 
     return (

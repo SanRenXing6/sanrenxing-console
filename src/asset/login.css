@@ -58,17 +58,17 @@ button {
 
 .login {
     color: white;
-    background-color: rgb(38, 158, 148);
+    background-color: rgb(76,147,150);
 }
 
 .signUp {
-    color: rgb(38, 158, 148);
+    color: rgb(76,147,150);
     background-color: rgba(255, 255, 255, 1);
-    border: 1px solid rgb(38, 158, 148);
+    border: 1px solid rgb(76,147,150);
 }
 
 button:hover {
-    border: 1px solid rgb(38, 158, 148);
+    border: 1px solid rgb(76,147,150);
     font-size: 14px;
 }
 
@@ -82,7 +82,7 @@ button:hover {
     width: 280px;
     font-size: large;
     border-radius: 8px;
-    border: 2px solid rgb(38, 158, 148);
+    border: 2px solid rgb(76,147,150);
     margin-left: 8px;
     padding-left: 8px;
 }
@@ -91,11 +91,11 @@ button:hover {
     font-size: large;
     font-weight: bold;
     padding-right: 10px;
-    color: rgb(38, 158, 148);
+    color: rgb(76,147,150);
 }
 
 .welcomeText {
-    color: rgb(38, 158, 148);
+    color: rgb(76,147,150);
     font-size: x-large;
     font-weight: bold;
 }
