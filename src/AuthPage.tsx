@@ -5,6 +5,8 @@ import { request } from './AxiosHelper';
 import { checkIfStringEmpty, validateEmail } from './util/StringHelper';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 import { toastFailure, toastSuccesss } from './util/ToastHelper';
 
 const AuthPage: React.FC = () => {
@@ -12,6 +14,11 @@ const AuthPage: React.FC = () => {
     const [email, setEmail] = React.useState('');
     const [emailError, setEmailError] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [showPassword, setShowPassword] = React.useState(false);
+    const toggleShowPassword = () => {
+        console.log("test");
+        setShowPassword(!showPassword);
+    };
     const [passwordError, setPasswordError] = React.useState('');
     const [name, setName] = React.useState('');
     const [nameError, setNameError] = React.useState('');
@@ -32,7 +39,7 @@ const AuthPage: React.FC = () => {
                     toastSuccesss(SUCCESS_LOGIN_MESSAGE)
                     // TODO: jump to main page
                 }).catch((error) => {
-                    const errorMessage = error.response.data;
+                    const errorMessage = error?.response?.data;
                     toastFailure(errorMessage);
                 });
         }
@@ -54,7 +61,7 @@ const AuthPage: React.FC = () => {
                     clearAllErrors();
                     toastSuccesss(SUCCESS_REGISTER_MESSAGE)
                 }).catch((error) => {
-                    const errorMessage = error.response.data;
+                    const errorMessage = error?.response?.data;
                     toastFailure(errorMessage);
                 });
         }
@@ -100,7 +107,7 @@ const AuthPage: React.FC = () => {
     }
 
     return (
-        <div>
+        <div className="authPage">
             <img src={logo} className="App-logo" alt="logo" />
             <ToastContainer />
             <div className="mainContainer">
@@ -122,11 +129,19 @@ const AuthPage: React.FC = () => {
                         </div>
                         <div className="formItem">
                             <label className="inputLabel">Password:</label>
-                            <input
-                                className="inputBox"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                            />
+                            <div className="inputWithButton">
+                                <input
+                                    className="inputBox"
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
+                                />
+                                <button type="button" className="iconButton" onClick={toggleShowPassword}>
+                                    {showPassword ?
+                                        <FaEyeSlash className="hidePassword" /> :
+                                        <FaEye className="showPassword" />}
+                                </button>
+                            </div>
                             <label className="errorLabel">{passwordError}</label>
                         </div>
                         <br />
@@ -160,11 +175,20 @@ const AuthPage: React.FC = () => {
                         </div>
                         <div className="formItem">
                             <label className="inputLabel">Password:</label>
-                            <input
-                                className="inputBox"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                            />
+                            <div className="inputWithButton">
+                                <input
+                                    className="inputBox"
+                                    type={showPassword ? "text" : "password"}
+                                    onChange={e => setPassword(e.target.value)}
+                                />
+                                <button
+                                    className="iconButton"
+                                    onClick={toggleShowPassword}>
+                                    {showPassword ?
+                                        <FaEyeSlash /> :
+                                        <FaEye />}
+                                </button>
+                            </div>
                             <label className="errorLabel">{passwordError}</label>
                         </div>
                         <br />

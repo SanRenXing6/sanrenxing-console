@@ -10,7 +10,6 @@
     display: flex;
     flex-direction: column;
     font-size: 20px;
-    color: black;
     font-weight: 360;
     align-items: center;
     justify-content: center;
@@ -44,6 +43,7 @@
     align-items: flex-start;
     /* Horizontal alignment */
     padding-bottom: 12px;
+    padding-left: 60px;
 }
 
 .buttonContainer {
@@ -82,8 +82,34 @@ button {
     margin: 0 10px;
     width: 80px;
     padding: 10px 0;
-    box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
     transition: 0.4s;
+}
+
+.inputWithButton {
+    position: relative;
+}
+
+.iconButton {
+    height: 2rem;
+    width: 2rem;
+    border: none !important;
+    background: inherit !important;
+    padding: 2px;
+    position: relative;
+    left: -46px;
+    top: 1px;
+    color: rgb(76, 147, 150);
+}
+
+.inputBox {
+    height: 28px;
+    width: 280px;
+    font-size: medium;
+    border-radius: 8px;
+    border: 2px solid rgb(76, 147, 150);
+    background: inherit;
+    padding-left: 8px;
+    margin-bottom: 5px;
 }
 
 .login {
@@ -100,15 +126,6 @@ button {
 button:hover {
     border: 1px solid rgb(76, 147, 150);
     font-size: 14px;
-}
-
-.inputBox {
-    height: 28px;
-    width: 280px;
-    font-size: medium;
-    border-radius: 8px;
-    border: 2px solid rgb(76, 147, 150);
-    margin-bottom: 5px;
 }
 
 .inputLabel {
