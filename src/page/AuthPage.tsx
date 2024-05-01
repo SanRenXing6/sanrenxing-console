@@ -1,13 +1,13 @@
 import React from 'react';
-import logo from './asset/logo.png';
-import './asset/login.css';
-import { request, setAuthToken } from './util/AxiosHelper';
-import { checkIfStringEmpty, validateEmail } from './util/StringHelper';
+import logo from '../asset/logo.png';
+import '../asset/login.css';
+import { request, setAuthToken } from '../util/AxiosHelper';
+import { checkIfStringEmpty, validateEmail } from '../util/StringHelper';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
-import { toastFailure, toastSuccesss } from './util/ToastHelper';
+import { toastFailure, toastSuccesss } from '../util/ToastHelper';
 import { useNavigate } from 'react-router-dom';
 
 const AuthPage: React.FC = () => {
@@ -17,7 +17,6 @@ const AuthPage: React.FC = () => {
     const [password, setPassword] = React.useState('');
     const [showPassword, setShowPassword] = React.useState(false);
     const toggleShowPassword = () => {
-        console.log("test");
         setShowPassword(!showPassword);
     };
     const [passwordError, setPasswordError] = React.useState('');
@@ -58,10 +57,9 @@ const AuthPage: React.FC = () => {
                     email: email,
                     password: password
                 })
-                .then((response) => {
+                .then(() => {
                     setIsLogin(true);
                     clearAllErrors();
-                    setAuthToken(response?.data?.token)
                     toastSuccesss(SUCCESS_REGISTER_MESSAGE)
                 }).catch((error) => {
                     const errorMessage = error?.response?.data;

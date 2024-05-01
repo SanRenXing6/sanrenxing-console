@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import './asset/App.css';
+import '../asset/App.css';
 import AuthPage from './AuthPage';
 import OverviewPage from './OverviewPage';
 
