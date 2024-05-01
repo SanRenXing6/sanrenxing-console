@@ -1,13 +1,14 @@
 import React from 'react';
 import logo from './asset/logo.png';
 import './asset/login.css';
-import { request } from './AxiosHelper';
+import { request, setAuthToken } from './util/AxiosHelper';
 import { checkIfStringEmpty, validateEmail } from './util/StringHelper';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { toastFailure, toastSuccesss } from './util/ToastHelper';
+import { useNavigate } from 'react-router-dom';
 
 const AuthPage: React.FC = () => {
 
@@ -24,7 +25,8 @@ const AuthPage: React.FC = () => {
     const [nameError, setNameError] = React.useState('');
     const [isLogin, setIsLogin] = React.useState(true);
     const SUCCESS_REGISTER_MESSAGE = "Successfully signed up!";
-    const SUCCESS_LOGIN_MESSAGE = "Successfully logged in!";
+
+    const navigate = useNavigate()
 
     const login = () => {
         const validated = checkFormValues();
@@ -35,9 +37,9 @@ const AuthPage: React.FC = () => {
                     email: email,
                     password: password
                 })
-                .then(() => {
-                    toastSuccesss(SUCCESS_LOGIN_MESSAGE)
-                    // TODO: jump to main page
+                .then((response) => {
+                    setAuthToken(response?.data?.token)
+                    navigate('/overview');
                 }).catch((error) => {
                     const errorMessage = error?.response?.data;
                     toastFailure(errorMessage);
@@ -56,9 +58,10 @@ const AuthPage: React.FC = () => {
                     email: email,
                     password: password
                 })
-                .then(() => {
+                .then((response) => {
                     setIsLogin(true);
                     clearAllErrors();
+                    setAuthToken(response?.data?.token)
                     toastSuccesss(SUCCESS_REGISTER_MESSAGE)
                 }).catch((error) => {
                     const errorMessage = error?.response?.data;
@@ -70,7 +73,7 @@ const AuthPage: React.FC = () => {
     const checkFormValues = () => {
         var validated = true;
         if (checkIfStringEmpty(email)) {
-            setEmailError("Email must not be null!");
+            setEmailError("Email must not be empty!");
             validated = false;
         } else if (!validateEmail(email)) {
             setEmailError("Email " + email + " is not valid!")
@@ -79,13 +82,13 @@ const AuthPage: React.FC = () => {
             setEmailError("");
         }
         if (checkIfStringEmpty(password)) {
-            setPasswordError("Password must not be null!");
+            setPasswordError("Password must not be empty!");
             validated = false;
         } else {
             setPasswordError("");
         }
         if (!isLogin && checkIfStringEmpty(name)) {
-            setNameError("Name must not be null!");
+            setNameError("Name must not be empty!");
             validated = false;
         } else {
             setNameError("");
