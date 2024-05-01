@@ -16,23 +16,23 @@
 }
 
 .success-toast {
-    font-size: 16px;
+    font-size: 13px;
     display: flex;
     justify-content: flex-start;
 }
 
-.success-toast-container {
-    border-color: rgb(76, 147, 150);
+.success-toast .Toastify__close-button {
+    border: transparent !important;
 }
 
 .failure-toast {
-    font-size: 16px;
+    font-size: 13px;
     display: flex;
     justify-content: flex-start;
 }
 
-.failure-toast-container {
-    border-color: rgb(226, 85, 85);
+.failure-toast .Toastify__close-button {
+    border: transparent !important;
 }
 
 .formItem {
@@ -109,7 +109,7 @@ button {
     border: 2px solid rgb(76, 147, 150);
     background: inherit;
     padding-left: 8px;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .login {

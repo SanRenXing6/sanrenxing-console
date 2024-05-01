@@ -23,7 +23,7 @@ const AuthPage: React.FC = () => {
     const [name, setName] = React.useState('');
     const [nameError, setNameError] = React.useState('');
     const [isLogin, setIsLogin] = React.useState(true);
-    const SUCCESS_REGISTER_MESSAGE = "Successfully registered user!";
+    const SUCCESS_REGISTER_MESSAGE = "Successfully signed up!";
     const SUCCESS_LOGIN_MESSAGE = "Successfully logged in!";
 
     const login = () => {
