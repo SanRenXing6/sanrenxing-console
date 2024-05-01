@@ -1,11 +1,11 @@
 import './asset/App.css';
-import LoginPage from './LoginPage';
+import AuthPage from './AuthPage';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <LoginPage />
+        <AuthPage />
       </header>
     </div>
   );
