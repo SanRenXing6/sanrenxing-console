@@ -1,12 +1,13 @@
 import * as React from "react";
-import { request } from "../util/AxiosHelper";
+import { getAuthToken, request } from "../util/AxiosHelper";
 
 const OverviewPage: React.FC = () => {
     React.useEffect(() => {
         request("GET",
             "/users",
             {},
-            true)
+            { "Authorization": `Bearer ${getAuthToken()}` }
+        )
             .then((response) => {
                 console.log(response?.data)
             }).catch((error) => {
