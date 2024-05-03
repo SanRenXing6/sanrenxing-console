@@ -21,7 +21,7 @@ const ProfilePage: React.FC = () => {
         formData.append('file', image.data)
         request(
             "POST",
-            "/profiles/image",
+            "/images",
             formData,
             {
                 "Authorization": `Bearer ${getAuthToken()}`,
@@ -40,11 +40,9 @@ const ProfilePage: React.FC = () => {
     const retriveImage = async (imageId: string) => {
         request(
             "GET",
-            `/profiles/image/${imageId}`,
+            `/images/${imageId}`,
             {},
-            {
-                "Authorization": `Bearer ${getAuthToken()}`,
-            },
+            { "Authorization": `Bearer ${getAuthToken()}` },
             'blob'
         ).then(response => {
             const blob = response.data;
@@ -65,14 +63,15 @@ const ProfilePage: React.FC = () => {
             <hr></hr>
             <form method="post" action="/upload" encType="multipart/form-data" onSubmit={handleSubmit}>
                 <input
+                    id="file"
                     type='file'
                     name='upload-image'
                     onChange={handleFileChange}
                 >
                 </input>
                 <button type='submit'>Submit</button>
+                <button type='button' onClick={() => retriveImage(imageId)}>Retrive</button>
             </form>
-            <button type='button' onClick={() => retriveImage(imageId)}>Retrive</button>
             {imageUrl ? <img src={imageUrl} alt="Loaded from server" /> : <p>Loading...</p>}
         </div>
 
