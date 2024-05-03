@@ -38,7 +38,7 @@ const AuthPage: React.FC = () => {
                 })
                 .then((response) => {
                     setAuthToken(response?.data?.token)
-                    navigate('/overview');
+                    navigate('/profile');
                 }).catch((error) => {
                     const errorMessage = error?.response?.data;
                     toastFailure(errorMessage);

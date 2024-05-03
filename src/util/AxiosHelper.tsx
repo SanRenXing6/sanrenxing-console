@@ -14,16 +14,21 @@ export const setAuthToken = (token: string) => {
     window.localStorage.setItem("auth_token", token);
 }
 
-export const request = (method: string, url: string, data: any) => {
-    let headers = {};
-    if (getAuthToken() !== null && getAuthToken() !== "null") {
-        headers = { "Authorization": `Bearer ${getAuthToken()}` };
+export const request = (method: string, url: string, data: any, auth_header?: boolean) => {
+    if (auth_header) {
+        var headers = { "Authorization": `Bearer ${getAuthToken()}` };
+        return axios({
+            method: method,
+            headers: headers,
+            url: url,
+            data: data
+        })
+    } else {
+        return axios({
+            method: method,
+            url: url,
+            data: data
+        })
     }
 
-    return axios({
-        method: method,
-        headers: headers,
-        url: url,
-        data: data
-    })
 }

@@ -5,7 +5,8 @@ const OverviewPage: React.FC = () => {
     React.useEffect(() => {
         request("GET",
             "/users",
-            {})
+            {},
+            true)
             .then((response) => {
                 console.log(response?.data)
             }).catch((error) => {
