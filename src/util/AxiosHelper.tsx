@@ -14,8 +14,6 @@ export const setAuthToken = (token: string) => {
     window.localStorage.setItem("auth_token", token);
 }
 
-const DEFAULT_HEADER = { "Authorization": `Bearer ${getAuthToken()}`}
-
 export const request = (method: string,
     url: string,
     data: any,
@@ -26,7 +24,7 @@ export const request = (method: string,
         method: method,
         url: url,
         data: data,
-        headers: headers || DEFAULT_HEADER,
+        headers: headers || { "Authorization": `Bearer ${getAuthToken()}` },
         ...responseType && { responseType: responseType }
     })
 }
