@@ -5,8 +5,7 @@ const OverviewPage: React.FC = () => {
     React.useEffect(() => {
         request("GET",
             "/users",
-            {},
-            { "Authorization": `Bearer ${getAuthToken()}` }
+            {}
         )
             .then((response) => {
                 console.log(response?.data)

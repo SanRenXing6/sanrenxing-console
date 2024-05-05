@@ -35,10 +35,12 @@ const AuthPage: React.FC = () => {
                 {
                     email: email,
                     password: password
-                })
+                },
+                {}
+            )
                 .then((response) => {
-                    setAuthToken(response?.data?.token)
-                    navigate('/profile');
+                    setAuthToken(response?.data?.token);
+                    navigate('/profile', { state: { email: email } });
                 }).catch((error) => {
                     const errorMessage = error?.response?.data;
                     toastFailure(errorMessage);
@@ -50,13 +52,16 @@ const AuthPage: React.FC = () => {
     const signUp = () => {
         const validated = checkFormValues();
         if (validated) {
-            request("POST",
+            request(
+                "POST",
                 "/auth/register",
                 {
                     name: name,
                     email: email,
                     password: password
-                })
+                },
+                {}
+            )
                 .then(() => {
                     setIsLogin(true);
                     clearAllErrors();
@@ -109,7 +114,7 @@ const AuthPage: React.FC = () => {
 
     return (
         <div className="authPage">
-            <img src={logo} className="App-logo" alt="logo" />
+            <img src={logo} className="appLogo" alt="logo" />
             <ToastContainer />
             <div className="mainContainer">
                 <br />

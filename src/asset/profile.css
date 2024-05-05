@@ -1,0 +1,5 @@
+.userIcon {
+    height: 10vmin;
+    width: 10vmin;
+    pointer-events: none;
+}

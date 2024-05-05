@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import '../asset/App.css';
 import AuthPage from './AuthPage';
 import OverviewPage from './OverviewPage';
-import ProfilePage from './ProfilePage';
+import AddProfilePage from './Profile/AddProfilePage';
 
 function HomePage() {
   return (
@@ -12,7 +12,7 @@ function HomePage() {
           <Routes>
             <Route path="/" element={<AuthPage />} />
             <Route path="/overview" element={<OverviewPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile" element={<AddProfilePage />} />
           </Routes>
         </BrowserRouter>
       </header>
