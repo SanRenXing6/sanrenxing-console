@@ -1,10 +1,10 @@
 import { getAuthToken, request } from "./AxiosHelper";
 
-export const uploadImage = (image: any): string => {
+export const uploadImage = async (image: any): Promise<string> => {
     let formData = new FormData()
     let imageId = "";
     formData.append('file', image.data)
-    request(
+    await request(
         "POST",
         "/images",
         formData,

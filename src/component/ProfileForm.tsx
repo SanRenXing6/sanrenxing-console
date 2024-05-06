@@ -4,9 +4,9 @@ import defaultUserIcon from "../asset/profile.png";
 import "../asset/profile.css";
 import { request } from "../util/AxiosHelper";
 import { uploadImage } from "../util/ImageHelper";
-import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
 import { Skill } from "../model/Skill";
-import { insert } from "../util/ArrayHelper";
+import { insert, remove } from "../util/ArrayHelper";
+import { IoAddCircleOutline, IoCloseCircleOutline } from "react-icons/io5";
 
 const ProfileForm: React.FC = () => {
 
@@ -17,10 +17,8 @@ const ProfileForm: React.FC = () => {
     const [skillName, setSkillName] = React.useState('');
     const [skillRate, setSkillRate] = React.useState(1);
     const [skills, setSkills] = React.useState<Skill[]>([{ name: '', rate: 1 }]);
+    const [skillError, setSkillError] = React.useState('');
     const navigate = useNavigate();
-
-    console.log(skillName, skillRate);
-    console.log(skills)
 
     const location = useLocation();
 
@@ -55,6 +53,12 @@ const ProfileForm: React.FC = () => {
     }
 
     const addSkills = () => {
+        if (!skillName || skillName?.length == 0) {
+            setSkillError("Required!");
+            return;
+        } else {
+            setSkillError("");
+        }
         const targetIdx = skills.length - 1;
         const newSkills = insert(skills, targetIdx, { name: skillName, rate: skillRate });
         setSkills(newSkills);
@@ -62,15 +66,26 @@ const ProfileForm: React.FC = () => {
         setSkillRate(1);
     }
 
-    const handleSubmit = async (e: any) => {
-        e.preventDefault()
+    const removeSkill = (id: number) => {
+        const newSkills = remove(skills, id);
+        setSkills(newSkills);
+    }
+
+    const handleSubmit = async () => {
         const imageId = await uploadImage(image);
-        addProfile(imageId);
+        if (imageId && imageId.length > 0) {
+            let savedSkills = skills;
+            if (skillName && skillName.length > 0) {
+                savedSkills = insert(savedSkills, savedSkills.length - 1, { name: skillName, rate: skillRate });
+            }
+            await addProfile(imageId, savedSkills);
+        }
+        navigateToOverview();
     }
 
 
-    const addProfile = (imageId: string) => {
-        request(
+    const addProfile = async (imageId: string, skills: Skill[]) => {
+        await request(
             "POST",
             "/profiles",
             {
@@ -78,71 +93,90 @@ const ProfileForm: React.FC = () => {
                 imageId: imageId,
                 description: description,
                 needs: needs,
-                skills: undefined
+                skills: skills.slice(0, -1)
             }
         ).then(() => {
-            navigate("/overview");
         }).catch(error => {
             console.error(error);
         })
     }
 
+    const navigateToOverview = () => {
+        navigate("/overview");
+    }
+
     return (
-        <div className="mainContainer">
-            <div>
-                <div className="formItem">
+        <div className="formPage">
+            <div className="formContainer">
+                <div className="formField">
                     {image.preview ? (<img src={image.preview} className="userIcon" alt="custom-profile" />) :
                         (<img className="userIcon" src={defaultUserIcon} alt="default-profile"></img>)}
-                    <input type='file' onChange={handleFileChange} />
+                    <input className="uploadFile" type='file' onChange={handleFileChange} />
                 </div>
-                <div className="formItem">
-                    <label className="inputLabel">{`Email: ${location?.state?.email}`}</label>
+                <div className="formField">
+                    <label className="fieldLabel">{`Email: ${location?.state?.email}`}</label>
                 </div>
-                <div className="formItem">
-                    <label className="inputLabel">Description:</label>
+                <div className="formField">
+                    <label className="fieldLabel">Description:</label>
                     <textarea
                         value={description}
+                        className="fieldInputMultiLine"
                         onChange={handleDescriptionChange}
                         placeholder="Self introduction"
                     />
                 </div>
-                <div className="formItem">
-                    <label className="inputLabel">Needs:</label>
+                <div className="formField">
+                    <label className="fieldLabel">Needs:</label>
                     <textarea
                         value={needs}
+                        className="fieldInputMultiLine"
                         onChange={handleNeedsChange}
                         placeholder="Describe what do you need"
                     />
                 </div>
-                <div className="formItem">
-                    <label className="inputLabel">Skills:</label>
+                <div className="formField">
+                    <label className="fieldLabel">Skills:</label>
                     {skills?.map((item, idx) => {
                         const isLastOne = idx === skills.length - 1;
                         return (
                             <div className="skillRow" key={idx}>
+                                <label className="subFieldLabel">Name:</label>
                                 <input
+                                    className="skillNameInput"
                                     value={isLastOne ? skillName : item?.name}
                                     disabled={!isLastOne}
                                     onChange={e => setSkillName(e.target.value)}
                                 />
-                                <NumberInput
-                                    value={isLastOne ? skillRate : item?.rate}
-                                    disabled={!isLastOne}
+                                <label className="subFieldLabel">Rate(1-10):</label>
+                                <input
+                                    className="skillRateInput"
+                                    type="number"
                                     min={1}
                                     max={10}
-                                    onChange={(__, val) => setSkillRate(val || 1)}
+                                    disabled={!isLastOne}
+                                    onChange={e => setSkillRate(+e.target.value)}
+                                    value={isLastOne ? skillRate : item?.rate}
                                 />
+                                {isLastOne ?
+                                    <button type="button" className="iconButton" onClick={() => addSkills()}>
+                                        <IoAddCircleOutline className="addSkillIcon" />
+                                    </button>
+                                    :
+                                    <button type="button" className="iconButton" onClick={() => removeSkill(idx)}>
+                                        <IoCloseCircleOutline className="removeSkillIcon" />
+                                    </button>
+                                }
                             </div>
                         )
                     })}
-                    <button type="button" onClick={() => addSkills()}>
-                        Add
-                    </button>
+                    <label className="skillError">{skillError}</label>
                 </div>
             </div>
-
-        </div >
-
+            <div className="profileButtons">
+                <button className="save" onClick={() => handleSubmit()}>Save</button>
+                <button className="skip" onClick={() => navigateToOverview()}>Skip</button>
+            </div>
+        </div>
     );
 }
 

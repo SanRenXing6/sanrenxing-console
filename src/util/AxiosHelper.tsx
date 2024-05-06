@@ -14,17 +14,18 @@ export const setAuthToken = (token: string) => {
     window.localStorage.setItem("auth_token", token);
 }
 
-export const request = (method: string,
+export const request = async (method: string,
     url: string,
     data: any,
     headers?: any,
     responseType?: any
 ) => {
-    return axios({
+    const response = await axios({
         method: method,
         url: url,
         data: data,
         headers: headers || { "Authorization": `Bearer ${getAuthToken()}` },
         ...responseType && { responseType: responseType }
     })
+    return response;
 }

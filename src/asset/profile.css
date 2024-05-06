@@ -1,9 +1,158 @@
+.formPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgb(76, 147, 150);
+    border-radius: 20px;
+    padding: 28px;
+}
+
+.formContainer {
+    width: 400px;
+    height: 680px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.formField {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 90%;
+    /* Vertical alignment */
+    align-items: flex-start;
+    /* Horizontal alignment */
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
 .userIcon {
+    align-self: center;
     height: 10vmin;
     width: 10vmin;
     pointer-events: none;
 }
 
+.uploadFile {
+    align-self: center;
+    background-color: white;
+    color: gray;
+    margin-left: 66px;
+    margin-bottom: 30px;
+}
+
 .skillRow {
+    display: flex;
     flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.fieldInputMultiLine {
+    height: 80px;
+    width: 100%;
+    font-size: medium;
+    border-radius: 8px;
+    border: 2px solid rgb(76, 147, 150);
+    background: inherit;
+    margin-bottom: 3px;
+    padding-left: 5px;
+}
+
+.skillNameInput {
+    width: 140px;
+    height: 20px;
+    font-size: small;
+    border-radius: 8px;
+    border: 2px solid rgb(76, 147, 150);
+    padding-left: 5px;
+    background: inherit;
+    margin-right: 12px;
+}
+
+.skillRateInput {
+    width: 28px;
+    height: 20px;
+    border-radius: 8px;
+    padding-left: 5px;
+    border: 2px solid rgb(76, 147, 150);
+    background: inherit;
+}
+
+.formContainer .iconButton {
+    height: auto;
+    width: auto;
+    border: none !important;
+    background: inherit !important;
+    position: relative;
+    left: 25px;
+}
+
+.addSkillIcon {
+    height: 1.7rem;
+    width: 1.7rem;
+    color: rgb(76, 147, 150);
+}
+
+.removeSkillIcon {
+    height: 1.7rem;
+    width: 1.7rem;
+    color: gray;
+}
+
+.skillError {
+    margin-left: 45px;
+    color: rgb(226, 85, 85);
+    font-size: 10px;
+}
+
+.fieldLabel {
+    font-size: medium;
+    font-weight: bold;
+    justify-self: start;
+    margin-bottom: 5px;
+    color: rgb(76, 147, 150);
+}
+
+.subFieldLabel {
+    font-weight: bold;
+    font-size: 11px;
+    margin-right: 5px;
+    color: rgb(76, 147, 150);
+}
+
+.profileButtons {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.save {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: 80px;
+    height: 40px;
+    font-size: 13px;
+    text-align: center;
+    background-color: rgb(76, 147, 150);
+}
+
+.skip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(76, 147, 150);
+    width: 80px;
+    height: 40px;
+    font-size: 13px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid rgb(76, 147, 150);
 }

@@ -7,8 +7,7 @@ const OverviewPage: React.FC = () => {
             "/users",
             {}
         )
-            .then((response) => {
-                console.log(response?.data)
+            .then(() => {
             }).catch((error) => {
                 console.log(error)
             });

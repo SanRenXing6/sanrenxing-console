@@ -113,7 +113,7 @@ const AuthPage: React.FC = () => {
     }
 
     return (
-        <div className="authPage">
+        <div>
             <img src={logo} className="appLogo" alt="logo" />
             <ToastContainer />
             <div className="mainContainer">
@@ -144,8 +144,8 @@ const AuthPage: React.FC = () => {
                                 />
                                 <button type="button" className="iconButton" onClick={toggleShowPassword}>
                                     {showPassword ?
-                                        <FaEyeSlash className="hidePassword" /> :
-                                        <FaEye className="showPassword" />}
+                                        <FaEyeSlash /> :
+                                        <FaEye />}
                                 </button>
                             </div>
                             <label className="errorLabel">{passwordError}</label>

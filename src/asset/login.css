@@ -89,7 +89,7 @@ button {
     position: relative;
 }
 
-.iconButton {
+.mainContainer .iconButton {
     height: 2rem;
     width: 2rem;
     border: none !important;
