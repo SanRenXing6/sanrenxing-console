@@ -39,8 +39,13 @@ const AuthPage: React.FC = () => {
                 {}
             )
                 .then((response) => {
-                    setAuthToken(response?.data?.token);
-                    navigate('/profile', { state: { email: email } });
+                    const data = response?.data;
+                    setAuthToken(data?.token);
+                    if (data?.hasProfile) {
+                        navigate('/overview');
+                    } else {
+                        navigate('/profile', { state: { userId: data?.userId } });
+                    }
                 }).catch((error) => {
                     const errorMessage = error?.response?.data;
                     toastFailure(errorMessage);

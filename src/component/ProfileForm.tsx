@@ -8,10 +8,11 @@ import { Skill } from "../model/Skill";
 import { insert, remove } from "../util/ArrayHelper";
 import { IoAddCircleOutline, IoCloseCircleOutline } from "react-icons/io5";
 
+
 const ProfileForm: React.FC = () => {
 
+    const [hasImage, setHasImage] = React.useState(false);
     const [image, setImage] = React.useState({ preview: '', data: '' })
-    const [userId, setUserId] = React.useState('');
     const [description, setDescription] = React.useState('');
     const [needs, setNeeds] = React.useState('');
     const [skillName, setSkillName] = React.useState('');
@@ -21,17 +22,9 @@ const ProfileForm: React.FC = () => {
     const navigate = useNavigate();
 
     const location = useLocation();
+    const userId = location.state.userId;
 
     React.useEffect(() => {
-        request(
-            "GET",
-            `/users/email/${location.state.email}`,
-            {}
-        ).then(response => {
-            setUserId(response?.data?.id);
-        }).catch(error => {
-            console.error(error);
-        });
         // initilize skills set
         setSkills([{ name: '', rate: 1 }]);
     }, [])
@@ -42,6 +35,7 @@ const ProfileForm: React.FC = () => {
             data: e.target.files[0],
         }
         setImage(img)
+        setHasImage(true)
     }
 
     const handleDescriptionChange = (event: any) => {
@@ -72,14 +66,20 @@ const ProfileForm: React.FC = () => {
     }
 
     const handleSubmit = async () => {
-        const imageId = await uploadImage(image);
-        if (imageId && imageId.length > 0) {
-            let savedSkills = skills;
-            if (skillName && skillName.length > 0) {
-                savedSkills = insert(savedSkills, savedSkills.length - 1, { name: skillName, rate: skillRate });
-            }
-            await addProfile(imageId, savedSkills);
+        let imageId = '';
+        let savedSkills = skills;
+        if (hasImage) {
+            imageId = await uploadImage(image);
         }
+        if (skillName && skillName.length > 0) {
+            savedSkills = insert(savedSkills,
+                savedSkills.length - 1,
+                { name: skillName, rate: skillRate }
+            );
+            // remove the template row
+            savedSkills = savedSkills.slice(0, -1);
+        }
+        await addProfile(imageId, savedSkills);
         navigateToOverview();
     }
 
@@ -93,7 +93,7 @@ const ProfileForm: React.FC = () => {
                 imageId: imageId,
                 description: description,
                 needs: needs,
-                skills: skills.slice(0, -1)
+                skills: skills
             }
         ).then(() => {
         }).catch(error => {
