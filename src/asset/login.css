@@ -43,7 +43,7 @@
     align-items: flex-start;
     /* Horizontal alignment */
     padding-bottom: 12px;
-    padding-left: 60px;
+    padding-left: 10px;
 }
 
 .buttonContainer {
@@ -85,31 +85,54 @@ button {
     transition: 0.4s;
 }
 
-.inputWithButton {
-    position: relative;
-}
-
-.mainContainer .iconButton {
-    height: 2rem;
-    width: 2rem;
-    border: none !important;
-    background: inherit !important;
-    padding: 2px;
-    position: relative;
-    left: -46px;
-    top: 1px;
-    color: rgb(76, 147, 150);
-}
-
-.inputBox {
-    height: 28px;
+.inputContainer {
+    display: flex;
+    flex-direction: row;
+    height: 32px;
     width: 280px;
     font-size: medium;
     border-radius: 8px;
     border: 2px solid rgb(76, 147, 150);
     background: inherit;
+    margin-bottom: 5px;
+}
+
+.inputContainer .iconButton {
+    height: 100%;
+    width: 5%;
+    border: none !important;
+    background: inherit !important;
+    color: rgb(76, 147, 150);
+}
+
+.inputBox {
+    height: 100%;
+    width: 100%;
+    font-size: medium;
+    border: none !important;
+    background: inherit !important;
+    background: inherit;
     padding-left: 8px;
-    margin-bottom: 3px;
+    border-radius: 8px;
+}
+
+.inputBox:focus {
+    outline: none;
+}
+
+.inputBoxWithButton {
+    height: 100%;
+    width: 95%;
+    font-size: medium;
+    border: none !important;
+    background: inherit !important;
+    background: inherit;
+    padding-left: 8px;
+    border-radius: 8px;
+}
+
+.inputBoxWithButton:focus {
+    outline: none;
 }
 
 .login {

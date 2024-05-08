@@ -119,9 +119,9 @@ const AuthPage: React.FC = () => {
 
     return (
         <div>
-            <img src={logo} className="appLogo" alt="logo" />
-            <ToastContainer />
             <div className="mainContainer">
+                <img src={logo} className="appLogo" alt="logo" />
+                <ToastContainer />
                 <br />
                 <div className="titleContainer">
                     <p className="welcomeText">Welcome to SanRenXing!</p>
@@ -131,18 +131,20 @@ const AuthPage: React.FC = () => {
                     <div>
                         <div className="formItem">
                             <label className="inputLabel">Email:</label>
-                            <input
-                                className="inputBox"
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
-                            />
+                            <div className="inputContainer">
+                                <input
+                                    className="inputBox"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
+                                />
+                            </div>
                             <label className="errorLabel">{emailError}</label>
                         </div>
                         <div className="formItem">
                             <label className="inputLabel">Password:</label>
-                            <div className="inputWithButton">
+                            <div className="inputContainer">
                                 <input
-                                    className="inputBox"
+                                    className="inputBoxWithButton"
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
@@ -168,27 +170,31 @@ const AuthPage: React.FC = () => {
                     <div>
                         <div className="formItem">
                             <label className="inputLabel">Name:</label>
-                            <input
-                                className="inputBox"
-                                value={name}
-                                onChange={e => setName(e.target.value)}
-                            />
+                            <div className="inputContainer">
+                                <input
+                                    className="inputBox"
+                                    value={name}
+                                    onChange={e => setName(e.target.value)}
+                                />
+                            </div>
                             <label className="errorLabel">{nameError}</label>
                         </div>
                         <div className="formItem">
                             <label className="inputLabel">Email:</label>
-                            <input
-                                className="inputBox"
-                                value={email}
-                                onChange={e => setEmail(e.target.value)}
-                            />
+                            <div className="inputContainer">
+                                <input
+                                    className="inputBox"
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
+                                />
+                            </div>
                             <label className="errorLabel">{emailError}</label>
                         </div>
                         <div className="formItem">
                             <label className="inputLabel">Password:</label>
-                            <div className="inputWithButton">
+                            <div className="inputContainer">
                                 <input
-                                    className="inputBox"
+                                    className="inputBoxWithButton"
                                     type={showPassword ? "text" : "password"}
                                     onChange={e => setPassword(e.target.value)}
                                 />
@@ -209,7 +215,6 @@ const AuthPage: React.FC = () => {
                     </div>
                 )
                 }
-
             </div>
         </div >
     );
