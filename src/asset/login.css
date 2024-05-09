@@ -3,7 +3,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 60vh;
 }
 
 .titleContainer {
@@ -13,6 +12,8 @@
     font-weight: 360;
     align-items: center;
     justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .success-toast {
@@ -51,10 +52,14 @@
     align-items: center;
     justify-content: center;
     flex-direction: row;
+    margin-top: 20px;
 }
 
 .appLogo {
-    height: 20vmin;
+    height: max(20vmin, 150px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: none;
 }
 
@@ -74,7 +79,7 @@
     }
 }
 
-button {
+.mainContainer button {
     cursor: pointer;
     border: 0;
     border-radius: 4px;
@@ -143,7 +148,7 @@ button {
 .signUp {
     color: rgb(76, 147, 150);
     background-color: rgba(255, 255, 255, 1);
-    border: 1px solid rgb(76, 147, 150);
+    border: 1px solid rgb(76, 147, 150) !important;
 }
 
 button:hover {

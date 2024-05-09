@@ -1,7 +1,14 @@
 import * as React from "react";
-import { getAuthToken, request } from "../util/AxiosHelper";
+import { useNavigate } from "react-router-dom";
+import LoginContext from "../context/LoginContext";
+import { request } from "../util/AxiosHelper";
 
 const OverviewPage: React.FC = () => {
+    const { userId } = React.useContext(LoginContext);
+    const navigate = useNavigate();
+    if (!userId || userId?.length === 0) {
+        navigate("/");
+    }
     React.useEffect(() => {
         request("GET",
             "/users",

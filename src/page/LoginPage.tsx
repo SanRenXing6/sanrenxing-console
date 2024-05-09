@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import logo from '../asset/logo.png';
 import '../asset/login.css';
 import { request, setAuthToken } from '../util/AxiosHelper';
@@ -9,6 +9,7 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { toastFailure, toastSuccesss } from '../util/ToastHelper';
 import { useNavigate } from 'react-router-dom';
+import LoginContext from '../context/LoginContext';
 
 const AuthPage: React.FC = () => {
 
@@ -16,6 +17,7 @@ const AuthPage: React.FC = () => {
     const [emailError, setEmailError] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [showPassword, setShowPassword] = React.useState(false);
+    const { setUserId } = useContext(LoginContext);
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -25,7 +27,7 @@ const AuthPage: React.FC = () => {
     const [isLogin, setIsLogin] = React.useState(true);
     const SUCCESS_REGISTER_MESSAGE = "Successfully signed up!";
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const login = () => {
         const validated = checkFormValues();
@@ -41,6 +43,7 @@ const AuthPage: React.FC = () => {
                 .then((response) => {
                     const data = response?.data;
                     setAuthToken(data?.token);
+                    setUserId(data?.userId);
                     if (data?.hasProfile) {
                         navigate('/overview');
                     } else {
@@ -118,105 +121,103 @@ const AuthPage: React.FC = () => {
     }
 
     return (
-        <div>
-            <div className="mainContainer">
-                <img src={logo} className="appLogo" alt="logo" />
-                <ToastContainer />
-                <br />
-                <div className="titleContainer">
-                    <p className="welcomeText">Welcome to SanRenXing!</p>
-                </div>
-                <br />
-                {isLogin ? (
-                    <div>
-                        <div className="formItem">
-                            <label className="inputLabel">Email:</label>
-                            <div className="inputContainer">
-                                <input
-                                    className="inputBox"
-                                    value={email}
-                                    onChange={e => setEmail(e.target.value)}
-                                />
-                            </div>
-                            <label className="errorLabel">{emailError}</label>
-                        </div>
-                        <div className="formItem">
-                            <label className="inputLabel">Password:</label>
-                            <div className="inputContainer">
-                                <input
-                                    className="inputBoxWithButton"
-                                    type={showPassword ? "text" : "password"}
-                                    value={password}
-                                    onChange={e => setPassword(e.target.value)}
-                                />
-                                <button type="button" className="iconButton" onClick={toggleShowPassword}>
-                                    {showPassword ?
-                                        <FaEyeSlash /> :
-                                        <FaEye />}
-                                </button>
-                            </div>
-                            <label className="errorLabel">{passwordError}</label>
-                        </div>
-                        <br />
-                        <div className="buttonContainer">
-                            <button className="login" onClick={() => login()}>Login</button>
-                            <button className="signUp" onClick={() => {
-                                setIsLogin(false);
-                                clearAllStates();
-                            }}>Sign up</button>
-                        </div>
-                    </div>
-                ) : (
-                    <div>
-                        <div className="formItem">
-                            <label className="inputLabel">Name:</label>
-                            <div className="inputContainer">
-                                <input
-                                    className="inputBox"
-                                    value={name}
-                                    onChange={e => setName(e.target.value)}
-                                />
-                            </div>
-                            <label className="errorLabel">{nameError}</label>
-                        </div>
-                        <div className="formItem">
-                            <label className="inputLabel">Email:</label>
-                            <div className="inputContainer">
-                                <input
-                                    className="inputBox"
-                                    value={email}
-                                    onChange={e => setEmail(e.target.value)}
-                                />
-                            </div>
-                            <label className="errorLabel">{emailError}</label>
-                        </div>
-                        <div className="formItem">
-                            <label className="inputLabel">Password:</label>
-                            <div className="inputContainer">
-                                <input
-                                    className="inputBoxWithButton"
-                                    type={showPassword ? "text" : "password"}
-                                    onChange={e => setPassword(e.target.value)}
-                                />
-                                <button
-                                    className="iconButton"
-                                    onClick={toggleShowPassword}>
-                                    {showPassword ?
-                                        <FaEyeSlash /> :
-                                        <FaEye />}
-                                </button>
-                            </div>
-                            <label className="errorLabel">{passwordError}</label>
-                        </div>
-                        <br />
-                        <div className="buttonContainer">
-                            <button className={isLogin ? "signUp" : "login"} onClick={() => signUp()}>Sign up</button>
-                        </div>
-                    </div>
-                )
-                }
+        <div className="mainContainer">
+            <img src={logo} className="appLogo" alt="logo" />
+            <ToastContainer />
+            <br />
+            <div className="titleContainer">
+                <p className="welcomeText">Welcome to SanRenXing!</p>
             </div>
-        </div >
+            <br />
+            {isLogin ? (
+                <div>
+                    <div className="formItem">
+                        <label className="inputLabel">Email:</label>
+                        <div className="inputContainer">
+                            <input
+                                className="inputBox"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                            />
+                        </div>
+                        <label className="errorLabel">{emailError}</label>
+                    </div>
+                    <div className="formItem">
+                        <label className="inputLabel">Password:</label>
+                        <div className="inputContainer">
+                            <input
+                                className="inputBoxWithButton"
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                            />
+                            <button type="button" className="iconButton" onClick={toggleShowPassword}>
+                                {showPassword ?
+                                    <FaEyeSlash /> :
+                                    <FaEye />}
+                            </button>
+                        </div>
+                        <label className="errorLabel">{passwordError}</label>
+                    </div>
+                    <br />
+                    <div className="buttonContainer">
+                        <button className="login" onClick={() => login()}>Login</button>
+                        <button className="signUp" onClick={() => {
+                            setIsLogin(false);
+                            clearAllStates();
+                        }}>Sign up</button>
+                    </div>
+                </div>
+            ) : (
+                <div>
+                    <div className="formItem">
+                        <label className="inputLabel">Name:</label>
+                        <div className="inputContainer">
+                            <input
+                                className="inputBox"
+                                value={name}
+                                onChange={e => setName(e.target.value)}
+                            />
+                        </div>
+                        <label className="errorLabel">{nameError}</label>
+                    </div>
+                    <div className="formItem">
+                        <label className="inputLabel">Email:</label>
+                        <div className="inputContainer">
+                            <input
+                                className="inputBox"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                            />
+                        </div>
+                        <label className="errorLabel">{emailError}</label>
+                    </div>
+                    <div className="formItem">
+                        <label className="inputLabel">Password:</label>
+                        <div className="inputContainer">
+                            <input
+                                className="inputBoxWithButton"
+                                type={showPassword ? "text" : "password"}
+                                onChange={e => setPassword(e.target.value)}
+                            />
+                            <button
+                                className="iconButton"
+                                onClick={toggleShowPassword}>
+                                {showPassword ?
+                                    <FaEyeSlash /> :
+                                    <FaEye />}
+                            </button>
+                        </div>
+                        <label className="errorLabel">{passwordError}</label>
+                    </div>
+                    <br />
+                    <div className="buttonContainer">
+                        <button className={isLogin ? "signUp" : "login"} onClick={() => signUp()}>Sign up</button>
+                    </div>
+                </div>
+            )
+            }
+        </div>
     );
 }
 

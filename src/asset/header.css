@@ -1,0 +1,56 @@
+.App-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(76, 147, 150);
+    min-height: 50px;
+}
+
+.headerLeft {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.headerRight {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.headerLogo {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 3px;
+    height: max(6vmin, 40px);
+    color: white;
+}
+
+.headerText {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 18px;
+    font-style: italic;
+    margin-left: 5px;
+    color: white
+}
+
+.logoutBtn {
+    display: flex;
+    padding: 3px;
+    background-color: rgb(76, 147, 150);
+    color: white;
+    border: none;
+    text-decoration: underline;
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+.logoutBtn:hover {
+    font-size: 17px;
+}
