@@ -6,10 +6,12 @@ import { setAuthToken } from '../util/AxiosHelper';
 import defaultUserIcon from "../asset/profile.png";
 
 export const AppHeader: React.FC = () => {
-    const { userId, setUserId } = React.useContext(LoginContext);
+    const { userId, setUserId, imageUrl, setImageUrl } = React.useContext(LoginContext);
+    const image = imageUrl || defaultUserIcon;
 
     const logout = () => {
         setUserId('');
+        setImageUrl('');
         setAuthToken('');
     }
 
@@ -22,7 +24,7 @@ export const AppHeader: React.FC = () => {
             {userId && userId?.length > 0 &&
                 <div className="headerRight">
                     <button className="logoutBtn" onClick={() => logout()}>log out</button>
-                    {/* <img src={defaultUserIcon} alt="Loaded from server" /> : */}
+                    <img className="profileImg" src={image} alt="Loaded from server" />
                 </div>
             }
         </div>

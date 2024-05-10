@@ -3,11 +3,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import defaultUserIcon from "../asset/profile.png";
 import "../asset/profile.css";
 import { request } from "../util/AxiosHelper";
-import { uploadImage } from "../util/ImageHelper";
+import { retriveImage, uploadImage } from "../util/ImageHelper";
 import { Skill } from "../model/Skill";
 import { insert, remove } from "../util/ArrayHelper";
 import { IoAddCircleOutline, IoCloseCircleOutline } from "react-icons/io5";
 import LoginContext from "../context/LoginContext";
+import LoadingPage from "../page/LoadingPage";
 
 
 const ProfileForm: React.FC = () => {
@@ -21,7 +22,8 @@ const ProfileForm: React.FC = () => {
     const [skills, setSkills] = React.useState<Skill[]>([{ name: '', rate: 1 }]);
     const [skillError, setSkillError] = React.useState('');
     const navigate = useNavigate();
-    const { setImageId } = React.useContext(LoginContext);
+    const { setImageUrl } = React.useContext(LoginContext);
+    const [isLoading, setIsLoading] = React.useState(false);
 
     const location = useLocation();
     const userId = location.state.userId;
@@ -49,7 +51,7 @@ const ProfileForm: React.FC = () => {
     }
 
     const addSkills = () => {
-        if (!skillName || skillName?.length == 0) {
+        if (!skillName || skillName?.length === 0) {
             setSkillError("Required!");
             return;
         } else {
@@ -70,6 +72,7 @@ const ProfileForm: React.FC = () => {
     const handleSubmit = async () => {
         let imageId = '';
         let savedSkills = skills;
+        setIsLoading(true);
         if (hasImage) {
             imageId = await uploadImage(image);
         }
@@ -82,6 +85,7 @@ const ProfileForm: React.FC = () => {
             savedSkills = savedSkills.slice(0, -1);
         }
         await addProfile(imageId, savedSkills);
+        setIsLoading(false);
         navigateToOverview();
     }
 
@@ -97,8 +101,9 @@ const ProfileForm: React.FC = () => {
                 needs: needs,
                 skills: skills
             }
-        ).then(() => {
-            setImageId(imageId);
+        ).then(async () => {
+            const imageUrl = await retriveImage(imageId);
+            setImageUrl(imageUrl);
         }).catch(error => {
             console.error(error);
         })
@@ -106,6 +111,10 @@ const ProfileForm: React.FC = () => {
 
     const navigateToOverview = () => {
         navigate("/overview");
+    }
+
+    if (isLoading) {
+        return <LoadingPage />
     }
 
     return (

@@ -9,9 +9,6 @@ export const getAuthToken = () => {
 }
 
 export const setAuthToken = (token: string) => {
-    if (token === null || token.length === 0) {
-        return;
-    }
     window.localStorage.setItem("auth_token", token);
 }
 

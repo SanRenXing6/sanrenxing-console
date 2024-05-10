@@ -1,9 +1,9 @@
 import { createContext } from "react";
 
 const LoginContext = createContext({
-    userId: '', setUserId: (userId: string) => { },
-    profileId: '', setProfileId: (profileId: string) => { },
-    imageId: '', setImageId: (imageId: string) => { },
+    userId: '', setUserId: (__: string) => { },
+    profileId: '', setProfileId: (__: string) => { },
+    imageUrl: '', setImageUrl: (__: string) => { },
 });
 
 export default LoginContext;

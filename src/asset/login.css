@@ -97,6 +97,7 @@ button {
     width: 280px;
     font-size: medium;
     border-radius: 8px;
+    padding-bottom: 2px;
     border: 2px solid rgb(76, 147, 150);
     background: inherit;
     margin-bottom: 5px;

@@ -24,6 +24,7 @@ export const uploadImage = async (image: any): Promise<string> => {
 
 export const retriveImage = async (imageId: string): Promise<string> => {
     let imageUrl = "";
+    console.log(imageId);
     await request(
         "GET",
         `/images/${imageId}`,
@@ -38,5 +39,6 @@ export const retriveImage = async (imageId: string): Promise<string> => {
             const errorMessage = error?.response?.data;
             console.log("error:", errorMessage);
         });
+    console.log(imageUrl);
     return imageUrl;
 }

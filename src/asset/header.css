@@ -4,7 +4,6 @@
     justify-content: space-between;
     align-items: center;
     background-color: rgb(76, 147, 150);
-    min-height: 50px;
 }
 
 .headerLeft {
@@ -26,6 +25,7 @@
     justify-content: flex-start;
     align-items: center;
     padding: 3px;
+    margin-left: 10px;
     height: max(6vmin, 40px);
     color: white;
 }
@@ -41,17 +41,23 @@
 }
 
 .logoutBtn {
-    display: flex;
-    padding: 3px;
     background-color: rgb(76, 147, 150);
     color: white;
     border: none;
     text-decoration: underline;
     font-size: 16px;
-    margin-right: 5px;
 }
 
 .logoutBtn:hover {
     font-size: 17px;
     border: none;
+}
+
+.profileImg {
+    display: flex;
+    background-color: white;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-right: 20px;
 }

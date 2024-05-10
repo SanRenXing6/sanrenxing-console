@@ -11,6 +11,7 @@ import { toastFailure, toastSuccesss } from '../util/ToastHelper';
 import { useNavigate } from 'react-router-dom';
 import LoginContext from '../context/LoginContext';
 import { retriveImage } from '../util/ImageHelper';
+import LoadingPage from './LoadingPage';
 
 const AuthPage: React.FC = () => {
 
@@ -18,7 +19,8 @@ const AuthPage: React.FC = () => {
     const [emailError, setEmailError] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [showPassword, setShowPassword] = React.useState(false);
-    const { setUserId, setProfileId, setImageId } = useContext(LoginContext);
+    const [isLoading, setIsLoading] = React.useState(false);
+    const { setUserId, setImageUrl, setProfileId } = useContext(LoginContext);
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -28,12 +30,22 @@ const AuthPage: React.FC = () => {
     const [isLogin, setIsLogin] = React.useState(true);
     const SUCCESS_REGISTER_MESSAGE = "Successfully signed up!";
 
+    // TODO: learn how to deal with global values when navigate back and forth
+    React.useEffect(() => {
+        setUserId('');
+        setProfileId('');
+        setImageUrl('');
+        setAuthToken('');
+        // eslint-disable-next-line
+    }, [])
+
     const navigate = useNavigate();
 
-    const login = () => {
+    const login = async () => {
         const validated = checkFormValues();
         if (validated) {
-            request("POST",
+            setIsLoading(true);
+            await request("POST",
                 "/auth/login",
                 {
                     email: email,
@@ -44,15 +56,17 @@ const AuthPage: React.FC = () => {
                 .then(async (response) => {
                     const data = response?.data;
                     setAuthToken(data?.token);
+                    const imageUrl = await retriveImage(data?.imageId);
                     setUserId(data?.userId);
-                    setProfileId(data?.profileId);
-                    setImageId(data?.imageId)
+                    setImageUrl(imageUrl);
+                    setIsLoading(false);
                     if (data?.profileId && data?.profileId.length > 0) {
                         navigate('/overview');
                     } else {
                         navigate('/profile', { state: { userId: data?.userId } });
                     }
                 }).catch((error) => {
+                    setIsLoading(false);
                     const errorMessage = error?.response?.data;
                     toastFailure(errorMessage);
                 });
@@ -121,6 +135,10 @@ const AuthPage: React.FC = () => {
         setNameError('');
         setEmailError('');
         setPasswordError('');
+    }
+
+    if (isLoading) {
+        return <LoadingPage />;
     }
 
     return (
