@@ -5,7 +5,7 @@ const LoadingPage = () => {
     return (
         <div className="loading-page">
             <div className="spinner"></div>
-            <p>Loading...</p>
+            <p className='loading-text'>Loading...</p>
         </div>
     );
 }

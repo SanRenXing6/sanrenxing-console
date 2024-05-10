@@ -13,7 +13,7 @@ import LoginContext from '../context/LoginContext';
 import { retriveImage } from '../util/ImageHelper';
 import LoadingPage from './LoadingPage';
 
-const AuthPage: React.FC = () => {
+const LoginPage: React.FC = () => {
 
     const [email, setEmail] = React.useState('');
     const [emailError, setEmailError] = React.useState('');
@@ -242,4 +242,4 @@ const AuthPage: React.FC = () => {
     );
 }
 
-export default AuthPage;
+export default LoginPage;

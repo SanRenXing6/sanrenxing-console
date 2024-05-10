@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import '../asset/App.css';
 import { AppHeader } from '../component/AppHeader';
-import AuthPage from './LoginPage';
+import LoginPage from './LoginPage';
 import OverviewPage from './OverviewPage';
 import AddProfilePage from './Profile/AddProfilePage';
 import LoginContext from '../context/LoginContext';
@@ -18,7 +18,7 @@ const HomePage = () => {
         <div className="App-body">
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<AuthPage />} />
+              <Route path="/" element={<LoginPage />} />
               <Route path="/overview" element={<OverviewPage />} />
               <Route path="/profile" element={<AddProfilePage />} />
             </Routes>

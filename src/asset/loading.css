@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 66vh;
 }
 
 .spinner {
@@ -25,4 +25,8 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+.loading-text {
+    color: gray;
 }
