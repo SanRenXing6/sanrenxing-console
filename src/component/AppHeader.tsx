@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 import '../asset/header.css';
 import logo from '../asset/headerLogo.png';
 import LoginContext from '../context/LoginContext';
 import { setAuthToken } from '../util/AxiosHelper';
+import defaultUserIcon from "../asset/profile.png";
 
 export const AppHeader: React.FC = () => {
     const { userId, setUserId } = React.useContext(LoginContext);
@@ -22,6 +22,7 @@ export const AppHeader: React.FC = () => {
             {userId && userId?.length > 0 &&
                 <div className="headerRight">
                     <button className="logoutBtn" onClick={() => logout()}>log out</button>
+                    {/* <img src={defaultUserIcon} alt="Loaded from server" /> : */}
                 </div>
             }
         </div>

@@ -9,9 +9,11 @@ import { useState } from 'react';
 
 const HomePage = () => {
   const [userId, setUserId] = useState("");
+  const [profileId, setProfileId] = useState("");
+  const [imageId, setImageId] = useState("");
   return (
     <div className="App">
-      <LoginContext.Provider value={{ userId, setUserId }}>
+      <LoginContext.Provider value={{ userId, setUserId, profileId, setProfileId, imageId, setImageId }}>
         <AppHeader />
         <div className="App-body">
           <BrowserRouter>

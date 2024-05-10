@@ -7,6 +7,7 @@ import { uploadImage } from "../util/ImageHelper";
 import { Skill } from "../model/Skill";
 import { insert, remove } from "../util/ArrayHelper";
 import { IoAddCircleOutline, IoCloseCircleOutline } from "react-icons/io5";
+import LoginContext from "../context/LoginContext";
 
 
 const ProfileForm: React.FC = () => {
@@ -20,6 +21,7 @@ const ProfileForm: React.FC = () => {
     const [skills, setSkills] = React.useState<Skill[]>([{ name: '', rate: 1 }]);
     const [skillError, setSkillError] = React.useState('');
     const navigate = useNavigate();
+    const { setImageId } = React.useContext(LoginContext);
 
     const location = useLocation();
     const userId = location.state.userId;
@@ -96,6 +98,7 @@ const ProfileForm: React.FC = () => {
                 skills: skills
             }
         ).then(() => {
+            setImageId(imageId);
         }).catch(error => {
             console.error(error);
         })

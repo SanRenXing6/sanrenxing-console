@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// axios.defaults.baseURL = 'https://localhost:8080/api/v1';
+// axios.defaults.baseURL = 'http://localhost:8080/api/v1';
 axios.defaults.baseURL = 'https://san-ren-xing-6141e43803cc.herokuapp.com/api/v1'
 axios.defaults.headers.post["Content-Type"] = 'application/json'
 

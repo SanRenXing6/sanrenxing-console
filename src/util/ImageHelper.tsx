@@ -22,8 +22,9 @@ export const uploadImage = async (image: any): Promise<string> => {
     return imageId;
 }
 
-export const retriveImage = async (imageId: string) => {
-    request(
+export const retriveImage = async (imageId: string): Promise<string> => {
+    let imageUrl = "";
+    await request(
         "GET",
         `/images/${imageId}`,
         {},
@@ -31,10 +32,11 @@ export const retriveImage = async (imageId: string) => {
         'blob'
     ).then(response => {
         const blob = response.data;
-        const url = URL.createObjectURL(blob);
+        imageUrl = URL.createObjectURL(blob);
     })
         .catch((error) => {
             const errorMessage = error?.response?.data;
             console.log("error:", errorMessage);
         });
+    return imageUrl;
 }

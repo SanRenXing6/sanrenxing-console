@@ -10,6 +10,7 @@ import { FaEyeSlash } from "react-icons/fa";
 import { toastFailure, toastSuccesss } from '../util/ToastHelper';
 import { useNavigate } from 'react-router-dom';
 import LoginContext from '../context/LoginContext';
+import { retriveImage } from '../util/ImageHelper';
 
 const AuthPage: React.FC = () => {
 
@@ -17,7 +18,7 @@ const AuthPage: React.FC = () => {
     const [emailError, setEmailError] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [showPassword, setShowPassword] = React.useState(false);
-    const { setUserId } = useContext(LoginContext);
+    const { setUserId, setProfileId, setImageId } = useContext(LoginContext);
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -40,11 +41,13 @@ const AuthPage: React.FC = () => {
                 },
                 {}
             )
-                .then((response) => {
+                .then(async (response) => {
                     const data = response?.data;
                     setAuthToken(data?.token);
                     setUserId(data?.userId);
-                    if (data?.hasProfile) {
+                    setProfileId(data?.profileId);
+                    setImageId(data?.imageId)
+                    if (data?.profileId && data?.profileId.length > 0) {
                         navigate('/overview');
                     } else {
                         navigate('/profile', { state: { userId: data?.userId } });
