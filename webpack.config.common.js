@@ -1,14 +1,15 @@
+// webpack.config.base.js
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: './src/index.tsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        clean: true
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js']
+        extensions: ['.js', '.jsx', '.ts', '.tsx']
     },
     module: {
         rules: [
@@ -32,10 +33,6 @@ module.exports = {
                 }
             },
             {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
-            },
-            {
                 test: /\.(png|jpg|jpeg|gif|svg|ico)$/i,
                 type: 'asset/resource'
             }
@@ -46,11 +43,5 @@ module.exports = {
             template: './public/index.html',
             favicon: './public/favicon.ico'
         })
-    ],
-    devServer: {
-        static: path.join(__dirname, 'dist'),
-        compress: true,
-        port: 3000
-    },
-    mode: 'development'
+    ]
 };
