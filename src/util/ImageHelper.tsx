@@ -36,7 +36,7 @@ export const retriveImage = async (imageId: string): Promise<string> => {
     })
         .catch((error) => {
             const errorMessage = error?.response?.data;
-            console.log("error:", errorMessage);
+            console.error("error:", errorMessage);
         });
     return imageUrl;
 }
