@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import '../asset/App.css';
 import { AppHeader } from '../component/AppHeader';
 import LoginPage from './LoginPage';
@@ -14,16 +14,17 @@ const HomePage = () => {
   return (
     <div className="App">
       <LoginContext.Provider value={{ userId, setUserId, profileId, setProfileId, imageUrl, setImageUrl }}>
-        <AppHeader />
-        <div className="App-body">
-          <BrowserRouter>
+        <BrowserRouter>
+          <AppHeader />
+          <div className="App-body">
             <Routes>
-              <Route path="/" element={<LoginPage />} />
+              <Route path="/" element={<Navigate replace to="/login"/>}/>
+              <Route path="/login" element={<LoginPage />} />
               <Route path="/overview" element={<OverviewPage />} />
               <Route path="/profile" element={<AddProfilePage />} />
             </Routes>
-          </BrowserRouter>
-        </div>
+          </div>
+        </BrowserRouter>
       </LoginContext.Provider>
     </div>
   );

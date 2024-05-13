@@ -24,6 +24,10 @@
 
 .success-toast .Toastify__close-button {
     border: transparent !important;
+    top: 0;
+    right: 0;
+    padding: 2px;
+    width: 10px;
 }
 
 .failure-toast {
@@ -34,6 +38,10 @@
 
 .failure-toast .Toastify__close-button {
     border: transparent !important;
+    top: 0;
+    right: 0;
+    padding: 2px;
+    width: 10px;
 }
 
 .formItem {
