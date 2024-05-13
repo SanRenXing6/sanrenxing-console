@@ -7,7 +7,6 @@ import { retriveImage, uploadImage } from "../util/ImageHelper";
 import { Skill } from "../model/Skill";
 import { insert, remove } from "../util/ArrayHelper";
 import { IoAddCircleOutline, IoCloseCircleOutline } from "react-icons/io5";
-import LoginContext from "../context/LoginContext";
 import LoadingPage from "../page/LoadingPage";
 
 
@@ -22,7 +21,6 @@ const ProfileForm: React.FC = () => {
     const [skills, setSkills] = React.useState<Skill[]>([{ name: '', rate: 1 }]);
     const [skillError, setSkillError] = React.useState('');
     const navigate = useNavigate();
-    const { setImageUrl } = React.useContext(LoginContext);
     const [isLoading, setIsLoading] = React.useState(false);
 
     const location = useLocation();
@@ -103,7 +101,7 @@ const ProfileForm: React.FC = () => {
             }
         ).then(async () => {
             const imageUrl = await retriveImage(imageId);
-            setImageUrl(imageUrl);
+            localStorage.setItem('imageUrl', imageUrl);
         }).catch(error => {
             console.error(error);
         })

@@ -1,23 +1,29 @@
 import * as React from 'react';
 import '../asset/header.css';
 import logo from '../asset/headerLogo.png';
-import LoginContext from '../context/LoginContext';
 import { setAuthToken } from '../util/AxiosHelper';
 import defaultUserIcon from "../asset/profile.png";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export const AppHeader: React.FC = () => {
-    const { setUserId, imageUrl, setImageUrl } = React.useContext(LoginContext);
-    const location = useLocation();
-    const image = imageUrl || defaultUserIcon;
+    const imageUrl = localStorage.getItem('imageUrl');
+    const userId = localStorage.getItem('userId');
+    const hasImage = imageUrl && imageUrl?.length > 0;
+    const hasUser = userId && userId?.length > 0;
+    const image = hasImage ? imageUrl : defaultUserIcon;
     const navigate = useNavigate();
-    const showProfile = location?.pathname !== "/login";
+
+    React.useEffect(() => {
+        if (!userId || userId?.length === 0) {
+            navigate("/")
+        }
+    }, [userId])
 
     const logout = () => {
-        navigate("/");
-        setUserId('');
-        setImageUrl('');
         setAuthToken('');
+        localStorage.setItem('userId', '');
+        localStorage.setItem('imageUrl', '');
+        navigate("/");
     }
 
     return (
@@ -27,7 +33,7 @@ export const AppHeader: React.FC = () => {
                 <text className="headerText">San Ren Xing</text >
             </div>
             <div className="headerRight">
-                {showProfile &&
+                {hasUser &&
                     <>
                         <button className="logoutBtn" onClick={() => logout()}>log out</button>
                         <img className="profileImg" src={image} alt="Loaded from server" />

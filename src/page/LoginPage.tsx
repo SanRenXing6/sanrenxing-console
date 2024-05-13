@@ -9,7 +9,6 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { toastFailure, toastSuccesss } from '../util/ToastHelper';
 import { useNavigate } from 'react-router-dom';
-import LoginContext from '../context/LoginContext';
 import { retriveImage } from '../util/ImageHelper';
 import LoadingPage from './LoadingPage';
 
@@ -20,7 +19,6 @@ const LoginPage: React.FC = () => {
     const [password, setPassword] = React.useState('');
     const [showPassword, setShowPassword] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
-    const { setUserId, setImageUrl, setProfileId } = useContext(LoginContext);
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -32,9 +30,9 @@ const LoginPage: React.FC = () => {
 
     // TODO: learn how to deal with global values when navigate back and forth
     React.useEffect(() => {
-        setUserId('');
-        setProfileId('');
-        setImageUrl('');
+        localStorage.setItem('userId', '');
+        localStorage.setItem('profileId', '');
+        localStorage.setItem('imageUrl', '');
         setAuthToken('');
         // eslint-disable-next-line
     }, [])
@@ -57,8 +55,8 @@ const LoginPage: React.FC = () => {
                     const data = response?.data;
                     setAuthToken(data?.token);
                     const imageUrl = await retriveImage(data?.imageId);
-                    setUserId(data?.userId);
-                    setImageUrl(imageUrl);
+                    localStorage.setItem('userId', data?.userId);
+                    localStorage.setItem('imageUrl', imageUrl);
                     setIsLoading(false);
                     if (data?.profileId && data?.profileId.length > 0) {
                         navigate('/overview');
@@ -234,11 +232,15 @@ const LoginPage: React.FC = () => {
                     <br />
                     <div className="buttonContainer">
                         <button className={isLogin ? "signUp" : "login"} onClick={() => signUp()}>Sign up</button>
+                        <button className="back" onClick={() => {
+                            setIsLogin(true);
+                            clearAllStates();
+                        }}>Back</button>
                     </div>
                 </div>
             )
             }
-        </div>
+        </div >
     );
 }
 
