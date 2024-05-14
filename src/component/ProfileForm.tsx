@@ -75,13 +75,14 @@ const ProfileForm: React.FC = () => {
             imageId = await uploadImage(image);
         }
         if (skillName && skillName.length > 0) {
+            // add the last one
             savedSkills = insert(savedSkills,
                 savedSkills.length - 1,
                 { name: skillName, rate: skillRate }
             );
-            // remove the template row
-            savedSkills = savedSkills.slice(0, -1);
         }
+        // remove the template row
+        savedSkills = savedSkills.slice(0, -1);
         await addProfile(imageId, savedSkills);
         setIsLoading(false);
         navigateToOverview();
