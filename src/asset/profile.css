@@ -11,10 +11,11 @@
 .formContainer {
     width: 400px;
     height: 680px;
-    overflow: hidden;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-y: auto;
 }
 
 .formField {
@@ -49,7 +50,6 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 2px;
 }
 
 .fieldInputMultiLine {
@@ -64,14 +64,14 @@
 }
 
 .skillNameInput {
-    width: 140px;
+    width: 128px;
     height: 20px;
     font-size: small;
     border-radius: 8px;
     border: 2px solid rgb(76, 147, 150);
     padding-left: 5px;
     background: inherit;
-    margin-right: 12px;
+    margin-right: 8px;
 }
 
 .skillRateInput {
@@ -105,7 +105,7 @@
 }
 
 .skillError {
-    margin-left: 45px;
+    margin-left: 35px;
     color: rgb(226, 85, 85);
     font-size: 10px;
 }

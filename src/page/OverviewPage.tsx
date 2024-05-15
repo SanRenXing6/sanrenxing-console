@@ -2,8 +2,10 @@ import * as React from "react";
 import { request } from "../util/AxiosHelper";
 import { FaSearch } from "react-icons/fa";
 import "../asset/overview.css"
+import { useTranslation } from 'react-i18next';
 
 const OverviewPage: React.FC = () => {
+    const { t } = useTranslation();
     const [input, setInput] = React.useState("");
     const [result, setResult] = React.useState<any[]>([]);
     const [data, setData] = React.useState<any[]>([]);
@@ -39,7 +41,7 @@ const OverviewPage: React.FC = () => {
             <div className="input-wrapper">
                 <FaSearch id="search-icon" />
                 <input
-                    placeholder="Type to search..."
+                    placeholder={t('typeToSearch')}
                     value={input}
                     onChange={(e) => handleChange(e.target.value)}
                     onBlur={(e) => { handleBlur(e) }}

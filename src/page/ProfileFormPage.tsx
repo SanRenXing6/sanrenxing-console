@@ -7,11 +7,12 @@ import { retriveImage, uploadImage } from "../util/ImageHelper";
 import { Skill } from "../model/Skill";
 import { insert, remove } from "../util/ArrayHelper";
 import { IoAddCircleOutline, IoCloseCircleOutline } from "react-icons/io5";
-import LoadingPage from "../page/LoadingPage";
+import LoadingPage from "./LoadingPage";
+import { useTranslation } from 'react-i18next';
 
+const ProfileFormPage: React.FC = () => {
 
-const ProfileForm: React.FC = () => {
-
+    const { t } = useTranslation();
     const [hasImage, setHasImage] = React.useState(false);
     const [image, setImage] = React.useState({ preview: '', data: '' })
     const [description, setDescription] = React.useState('');
@@ -50,7 +51,7 @@ const ProfileForm: React.FC = () => {
 
     const addSkills = () => {
         if (!skillName || skillName?.length === 0) {
-            setSkillError("Required!");
+            setSkillError(t('required'));
             return;
         } else {
             setSkillError("");
@@ -125,40 +126,40 @@ const ProfileForm: React.FC = () => {
                     <input className="uploadFile" type='file' onChange={handleFileChange} />
                 </div>
                 <div className="formField">
-                    <label className="fieldLabel">{`Email: ${location?.state?.email}`}</label>
+                    <label className="fieldLabel">{`${t('email')}: ${location?.state?.email}`}</label>
                 </div>
                 <div className="formField">
-                    <label className="fieldLabel">Description:</label>
+                    <label className="fieldLabel">{t('description')}:</label>
                     <textarea
                         value={description}
                         className="fieldInputMultiLine"
                         onChange={handleDescriptionChange}
-                        placeholder="Self introduction"
+                        placeholder={t('selfIntroduction')}
                     />
                 </div>
                 <div className="formField">
-                    <label className="fieldLabel">Needs:</label>
+                    <label className="fieldLabel">{t('needs')}:</label>
                     <textarea
                         value={needs}
                         className="fieldInputMultiLine"
                         onChange={handleNeedsChange}
-                        placeholder="Describe what do you need"
+                        placeholder={t('describeNeeds')}
                     />
                 </div>
                 <div className="formField">
-                    <label className="fieldLabel">Skills:</label>
+                    <label className="fieldLabel">{t('skills')}:</label>
                     {skills?.map((item, idx) => {
                         const isLastOne = idx === skills.length - 1;
                         return (
                             <div className="skillRow" key={idx}>
-                                <label className="subFieldLabel">Name:</label>
+                                <label className="subFieldLabel">{t('name')}:</label>
                                 <input
                                     className="skillNameInput"
                                     value={isLastOne ? skillName : item?.name}
                                     disabled={!isLastOne}
                                     onChange={e => setSkillName(e.target.value)}
                                 />
-                                <label className="subFieldLabel">Rate(1-10):</label>
+                                <label className="subFieldLabel">{t('rate')}(1-10):</label>
                                 <input
                                     className="skillRateInput"
                                     type="number"
@@ -184,11 +185,11 @@ const ProfileForm: React.FC = () => {
                 </div>
             </div>
             <div className="profileButtons">
-                <button className="save" onClick={() => handleSubmit()}>Save</button>
-                <button className="skip" onClick={() => navigateToOverview()}>Skip</button>
+                <button className="save" onClick={() => handleSubmit()}>{t('save')}</button>
+                <button className="skip" onClick={() => navigateToOverview()}>{t('skip')}</button>
             </div>
         </div>
     );
 }
 
-export default ProfileForm;
+export default ProfileFormPage;

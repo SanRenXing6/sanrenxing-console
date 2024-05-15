@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import logo from '../asset/logo.png';
 import '../asset/login.css';
 import { request, setAuthToken } from '../util/AxiosHelper';
@@ -11,8 +11,12 @@ import { toastFailure, toastSuccesss } from '../util/ToastHelper';
 import { useNavigate } from 'react-router-dom';
 import { retriveImage } from '../util/ImageHelper';
 import LoadingPage from './LoadingPage';
+import { useTranslation } from 'react-i18next';
+
 
 const LoginPage: React.FC = () => {
+
+    const { t } = useTranslation();
 
     const [email, setEmail] = React.useState('');
     const [emailError, setEmailError] = React.useState('');
@@ -26,7 +30,7 @@ const LoginPage: React.FC = () => {
     const [name, setName] = React.useState('');
     const [nameError, setNameError] = React.useState('');
     const [isLogin, setIsLogin] = React.useState(true);
-    const SUCCESS_REGISTER_MESSAGE = "Successfully signed up!";
+    const SUCCESS_REGISTER_MESSAGE = t('successSignUp');
 
     // TODO: learn how to deal with global values when navigate back and forth
     React.useEffect(() => {
@@ -61,7 +65,7 @@ const LoginPage: React.FC = () => {
                     if (data?.profileId && data?.profileId.length > 0) {
                         navigate('/overview');
                     } else {
-                        navigate('/profile', { state: { userId: data?.userId } });
+                        navigate('/profile', { state: { userId: data?.userId, email: email } });
                     }
                 }).catch((error) => {
                     setIsLoading(false);
@@ -145,13 +149,13 @@ const LoginPage: React.FC = () => {
             <ToastContainer />
             <br />
             <div className="titleContainer">
-                <p className="welcomeText">Welcome to SanRenXing!</p>
+                <p className="welcomeText">{t('pageTitle')}</p>
             </div>
             <br />
             {isLogin ? (
                 <div>
                     <div className="formItem">
-                        <label className="inputLabel">Email:</label>
+                        <label className="inputLabel">{t('email')}:</label>
                         <div className="inputContainer">
                             <input
                                 className="inputBox"
@@ -162,7 +166,7 @@ const LoginPage: React.FC = () => {
                         <label className="errorLabel">{emailError}</label>
                     </div>
                     <div className="formItem">
-                        <label className="inputLabel">Password:</label>
+                        <label className="inputLabel">{t('password')}:</label>
                         <div className="inputContainer">
                             <input
                                 className="inputBoxWithButton"
@@ -180,17 +184,17 @@ const LoginPage: React.FC = () => {
                     </div>
                     <br />
                     <div className="buttonContainer">
-                        <button className="login" onClick={() => login()}>Login</button>
+                        <button className="login" onClick={() => login()}>{t('login')}</button>
                         <button className="signUp" onClick={() => {
                             setIsLogin(false);
                             clearAllStates();
-                        }}>Sign up</button>
+                        }}>{t('signUp')}</button>
                     </div>
                 </div>
             ) : (
                 <div>
                     <div className="formItem">
-                        <label className="inputLabel">Name:</label>
+                        <label className="inputLabel">{t('name')}:</label>
                         <div className="inputContainer">
                             <input
                                 className="inputBox"
@@ -201,7 +205,7 @@ const LoginPage: React.FC = () => {
                         <label className="errorLabel">{nameError}</label>
                     </div>
                     <div className="formItem">
-                        <label className="inputLabel">Email:</label>
+                        <label className="inputLabel">{t('email')}:</label>
                         <div className="inputContainer">
                             <input
                                 className="inputBox"
@@ -212,7 +216,7 @@ const LoginPage: React.FC = () => {
                         <label className="errorLabel">{emailError}</label>
                     </div>
                     <div className="formItem">
-                        <label className="inputLabel">Password:</label>
+                        <label className="inputLabel">{t('password')}:</label>
                         <div className="inputContainer">
                             <input
                                 className="inputBoxWithButton"
@@ -231,11 +235,13 @@ const LoginPage: React.FC = () => {
                     </div>
                     <br />
                     <div className="buttonContainer">
-                        <button className={isLogin ? "signUp" : "login"} onClick={() => signUp()}>Sign up</button>
+                        <button className={isLogin ? "signUp" : "login"} onClick={() => signUp()}>
+                            {t('signUp')}
+                        </button>
                         <button className="back" onClick={() => {
                             setIsLogin(true);
                             clearAllStates();
-                        }}>Back</button>
+                        }}>{t('back')}</button>
                     </div>
                 </div>
             )

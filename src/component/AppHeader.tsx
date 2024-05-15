@@ -4,8 +4,11 @@ import logo from '../asset/headerLogo.png';
 import { setAuthToken } from '../util/AxiosHelper';
 import defaultUserIcon from "../asset/profile.png";
 import { useNavigate } from 'react-router-dom';
+import LanguageSelect from './LanguageSelect';
+import { useTranslation } from 'react-i18next';
 
 export const AppHeader: React.FC = () => {
+    const { t } = useTranslation();
     const imageUrl = localStorage.getItem('imageUrl');
     const userId = localStorage.getItem('userId');
     const hasImage = imageUrl && imageUrl?.length > 0;
@@ -30,12 +33,13 @@ export const AppHeader: React.FC = () => {
         <div className="App-header" >
             <div className="headerLeft">
                 <img src={logo} className="headerLogo" alt="logo" />
-                <text className="headerText">San Ren Xing</text >
+                <text className="headerText">{t('sanRenXing')}</text >
             </div>
             <div className="headerRight">
+                <LanguageSelect />
                 {hasUser &&
                     <>
-                        <button className="logoutBtn" onClick={() => logout()}>log out</button>
+                        <button className="logoutBtn" onClick={() => logout()}>{t('logOut')}</button>
                         <img className="profileImg" src={image} alt="Loaded from server" />
                     </>
                 }
