@@ -35,6 +35,7 @@ const OverviewPage: React.FC = () => {
                 {}
             ).then((response) => {
                 setProfileData(response?.data);
+                console.log(response?.data);
             });
         }
     }

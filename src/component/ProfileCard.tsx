@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import "../asset/profile.css";
 import userProfileImg from "../asset/profile.png";
 import { request } from "../util/AxiosHelper";
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const ProfileCard: React.FC<Props> = ({ data }) => {
+    const { t } = useTranslation();
     const [userName, setUserName] = React.useState("");
     const [imageUrl, setImageUrl] = React.useState<string>();
     React.useEffect(() => {
@@ -38,7 +40,9 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
             <div className="profile-info">
                 <div className="profile-name">{userName}</div>
                 <div className="profile-description">{data?.description}</div>
-                <div className="profile-skill-label">Skills</div>
+                <div className="profile-card-label">{t('needs')}</div>
+                <div className="profile-needs">{data?.needs}</div>
+                <div className="profile-card-label">{t('skills')}</div>
                 {
 
                     data?.skills?.map((skill: any) => {
