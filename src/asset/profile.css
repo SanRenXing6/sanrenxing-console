@@ -199,15 +199,37 @@
 .profile-info {
     flex: 1;
     align-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-left: 40px;
 }
 
 .profile-name {
+    display: flex;
+    justify-self: flex-start;
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .profile-description {
+    display: flex;
+    justify-self: flex-start;
     color: #666;
+    font-size: 1.0rem;
+}
+
+.profile-skill-label {
+    display: flex;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    justify-content: flex-start;
+}
+
+.profile-skill-name {
+    display: flex;
     font-size: 0.8rem;
+    margin-left: 10px;
+    justify-content: flex-start;
 }

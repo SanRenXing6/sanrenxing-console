@@ -2,6 +2,7 @@ import * as React from "react";
 import "../asset/profile.css";
 import userProfileImg from "../asset/profile.png";
 import { request } from "../util/AxiosHelper";
+import { retriveImage } from "../util/ImageHelper";
 
 interface Props {
     data: any
@@ -9,7 +10,7 @@ interface Props {
 
 const ProfileCard: React.FC<Props> = ({ data }) => {
     const [userName, setUserName] = React.useState("");
-    console.log(data);
+    const [imageUrl, setImageUrl] = React.useState<string>();
     React.useEffect(() => {
         request(
             "GET",
@@ -17,16 +18,33 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
             {}
         ).then((response) => {
             setUserName(response?.data?.name || "user")
-        })
-    }, [data?.userId])
+        });
+        const fetchImageData = async () => {
+            try {
+                const image = await retriveImage(data?.imageId);
+                setImageUrl(image);
+            } catch (error) {
+                console.error('Error fetching image data:', error);
+            }
+        };
+        fetchImageData();
+
+    }, [data?.userId, data?.imageId])
     return (
         <div className="profile-card">
             <div className="profile-picture">
-                <img src={userProfileImg}></img>
+                <img src={imageUrl || userProfileImg}></img>
             </div>
             <div className="profile-info">
                 <div className="profile-name">{userName}</div>
                 <div className="profile-description">{data?.description}</div>
+                <div className="profile-skill-label">Skills</div>
+                {
+
+                    data?.skills?.map((skill: any) => {
+                        return <div className="profile-skill-name">{skill.name}</div>
+                    })
+                }
             </div>
         </div>
     );

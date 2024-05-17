@@ -7,11 +7,12 @@ import ProfileCard from "../component/ProfileCard";
 
 const OverviewPage: React.FC = () => {
     const { t } = useTranslation();
-    const [input, setInput] = React.useState("");
-    const [result, setResult] = React.useState<any[]>([]);
+    const [inputValue, setInputValue] = React.useState("");
     const [skillData, setSkillData] = React.useState<any[]>([]);
-    const [profileData, setProfilesData] = React.useState<any[]>([]);
+    const [skillResult, setSkillResult] = React.useState<any[]>([]);
+    const [profileData, setProfileData] = React.useState<any[]>([]);
     const resultsRef = React.useRef<HTMLDivElement>(null);
+    const [showProfiles, setShowProfiles] = React.useState(false);
 
     React.useEffect(() => {
         // fetch skills
@@ -23,50 +24,56 @@ const OverviewPage: React.FC = () => {
             const data = response?.data?.map((skill: any) => skill.name);
             setSkillData(data);
         });
-        // fetch profiles
-        request(
-            "GET",
-            "/profiles",
-            {}
-        ).then((response) => {
-            setProfilesData(response?.data);
-        })
     }, []);
 
-    const handleChange = (value: string) => {
+    const handleKeyDown = (event: any) => {
+        if (event.key === 'Enter') {
+            setShowProfiles(true);
+            request(
+                "GET",
+                `/search/${inputValue}`,
+                {}
+            ).then((response) => {
+                setProfileData(response?.data);
+            });
+        }
+    }
+
+    const handleInputChange = (value: string) => {
         const result = skillData.filter((skill: any) => {
             return skill && skill.length > 0 && skill.includes(value);
         });
-        setResult(result);
-        setInput(value);
+        setSkillResult(result);
+        setInputValue(value);
     }
 
-    const handleBlur = (event: any) => {
+    const handleInputBlur = (event: any) => {
         if (!resultsRef?.current?.contains(event.relatedTarget)) {
-            setResult([]);
+            setSkillResult([]);
         }
     }
 
     return (
         <div>
-            <div className="search-bar-container">
+            <div className={showProfiles ? "search-bar-container-with-result" : "search-bar-container"}>
                 <div className="input-wrapper">
                     <FaSearch id="search-icon" />
                     <input
                         placeholder={t('typeToSearch')}
-                        value={input}
-                        onChange={(e) => handleChange(e.target.value)}
-                        onBlur={(e) => { handleBlur(e) }}
+                        value={inputValue}
+                        onChange={(e) => handleInputChange(e.target.value)}
+                        onBlur={(e) => { handleInputBlur(e) }}
+                        onKeyDown={handleKeyDown}
                     />
                 </div>
-                {result && result.length > 0 && (
+                {skillResult && skillResult.length > 0 && (
                     <div className="result-list" tabIndex={-1} ref={resultsRef}>
-                        {result.map((result: any, id: any) => {
+                        {skillResult.map((result: any, id: any) => {
                             return <div key={id}
                                 className="search-result"
                                 onClick={() => {
-                                    setInput(result.trim());
-                                    setResult([]);
+                                    setInputValue(result.trim());
+                                    setSkillResult([]);
                                 }}
                             >
                                 {result}
@@ -76,7 +83,7 @@ const OverviewPage: React.FC = () => {
                 )
                 }
             </div >
-            <div className="profile-list-container">
+            {showProfiles && <div className="profile-list-container">
                 <div className="profile-list">
                     {
                         profileData.map((profile: any, id: any) => {
@@ -87,6 +94,7 @@ const OverviewPage: React.FC = () => {
                     }
                 </div>
             </div>
+            }
         </div>
     );
 }
