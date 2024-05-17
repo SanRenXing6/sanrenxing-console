@@ -88,9 +88,9 @@ const OverviewPage: React.FC = () => {
                 <div className="profile-list">
                     {
                         profileData.map((profile: any, id: any) => {
-                            return <>
+                            return <div key={id}>
                                 <ProfileCard data={profile} />
-                            </>
+                            </div>
                         })
                     }
                 </div>
