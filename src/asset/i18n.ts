@@ -17,55 +17,78 @@ i18n
             escapeValue: false, // not needed for react as it escapes by default
         },
         resources: {
-            // TODO: refactor to labels, buttons etc to be more organized
             en: {
                 translation: {
-                    pageTitle: 'Welcome to SanRenXing!',
-                    sanRenXing: 'San Ren Xing',
-                    email: 'Email',
-                    password: 'Password',
-                    name: 'Name',
-                    login: 'Log in',
-                    signUp: 'Sign up',
-                    back: 'Back',
-                    logOut: 'Log out',
-                    typeToSearch: 'Type to search...',
-                    description: 'Description',
-                    needs: 'Needs',
-                    skills: 'Skills',
-                    rate: 'Rate',
-                    save: 'Save',
-                    skip: 'Skip',
-                    loading: 'Loading',
-                    required: 'Required!',
-                    successSignUp: 'Successfully signed up!',
-                    selfIntroduction: 'Self introduction',
-                    describeNeeds: 'Describe what do you need'
+                    titles: {
+                        pageTitle: 'Welcome to SanRenXing!',
+                        sanRenXing: 'San Ren Xing',
+                    },
+                    labels: {
+                        email: 'Email',
+                        password: 'Password',
+                        name: 'Name',
+                        needs: 'Needs',
+                        skills: 'Skills',
+                        rate: 'Rate',
+                    },
+                    buttons: {
+                        login: 'Log in',
+                        signUp: 'Sign up',
+                        back: 'Back',
+                        logOut: 'Log out',
+                        save: 'Save',
+                        skip: 'Skip',
+                    },
+                    messages: {
+                        typeToSearch: 'Type to search...',
+                        description: 'Description',
+                        loading: 'Loading',
+                        required: 'Required!',
+                        successSignUp: 'Successfully signed up!',
+                        selfIntroduction: 'Self introduction',
+                        describeNeeds: 'Describe what do you need'
+                    },
+                    errors: {
+                        mustInputValue: 'Required value!',
+                        emailNotValid: 'Email is not valid!'
+                    }
                 }
             },
             zh: {
                 translation: {
-                    pageTitle: '欢迎来到三人行！',
-                    sanRenXing: '三人行',
-                    email: '邮箱',
-                    password: '密码',
-                    name: '名字',
-                    login: '登陆',
-                    signUp: '注册',
-                    back: '返回',
-                    logOut: '退出登陆',
-                    typeToSearch: '输入搜索',
-                    description: '个人简介',
-                    needs: '需求',
-                    skills: '技能',
-                    rate: '评级',
-                    save: '保存',
-                    skip: '跳过',
-                    loading: '加载中',
-                    required: '请输入值！',
-                    successSignUp: '注册完成！',
-                    selfIntroduction: '请简单介绍一下你自己',
-                    describeNeeds: '请描述你的需求'
+                    titles: {
+                        pageTitle: '欢迎来到三人行！',
+                        sanRenXing: '三人行',
+                    },
+                    labels: {
+                        email: '邮箱',
+                        password: '密码',
+                        name: '名字',
+                        needs: '需求',
+                        skills: '技能',
+                        rate: '评级',
+                    },
+                    buttons: {
+                        login: '登陆',
+                        signUp: '注册',
+                        back: '返回',
+                        logOut: '退出登陆',
+                        save: '保存',
+                        skip: '跳过',
+                    },
+                    messages: {
+                        typeToSearch: '输入搜索',
+                        description: '个人简介',
+                        loading: '加载中',
+                        required: '请输入值！',
+                        successSignUp: '注册完成！',
+                        selfIntroduction: '请简单介绍一下你自己',
+                        describeNeeds: '请描述你的需求'
+                    },
+                    errors: {
+                        mustInputValue: '请输入值!',
+                        emailNotValid: '邮箱不合法!'
+                    }
                 }
             }
         }

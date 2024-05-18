@@ -58,12 +58,17 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
             <div className="profile-right">
                 <div className="profile-name">{userName}</div>
                 <div className="profile-description">{data?.description}</div>
-                <div className="profile-card-label">{t('needs')}</div>
+                <div className="profile-card-label">{t('labels.needs')}</div>
                 <div className="profile-needs">{data?.needs}</div>
-                <div className="profile-card-label">{t('skills')}</div>
+                <div className="profile-card-label">{t('labels.skills')}</div>
                 {
                     data?.skills?.map((skill: any) => {
-                        return <div className="profile-skill-name">• {skill.name}</div>
+                        {
+                            return skill?.name && skill.name.length > 0 ?
+                                <div className="profile-skill-name">• {skill.name}</div>
+                                : <></>
+                        }
+
                     })
                 }
             </div>

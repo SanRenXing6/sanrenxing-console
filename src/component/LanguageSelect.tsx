@@ -16,7 +16,6 @@ const LanguageSelect: React.FC = () => {
     const handleChange = (selectedOption: any) => {
         setSelectedOption(selectedOption);
         i18n.changeLanguage(selectedOption.value)
-        console.log(i18n);
     };
 
     return (

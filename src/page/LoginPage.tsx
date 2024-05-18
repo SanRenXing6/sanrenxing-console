@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
     const [name, setName] = React.useState('');
     const [nameError, setNameError] = React.useState('');
     const [isLogin, setIsLogin] = React.useState(true);
-    const SUCCESS_REGISTER_MESSAGE = t('successSignUp');
+    const SUCCESS_REGISTER_MESSAGE = t('messages.successSignUp');
 
     // TODO: learn how to deal with global values when navigate back and forth
     React.useEffect(() => {
@@ -103,28 +103,32 @@ const LoginPage: React.FC = () => {
     const checkFormValues = () => {
         var validated = true;
         if (checkIfStringEmpty(email)) {
-            setEmailError("Email must not be empty!");
+            setEmailError(t('errors.mustInputValue'));
             validated = false;
         } else if (!validateEmail(email)) {
-            setEmailError("Email " + email + " is not valid!")
+            setEmailError(t('errors.emailNotValid'))
             validated = false;
         } else {
             setEmailError("");
         }
+        console.log(password)
         if (checkIfStringEmpty(password)) {
-            setPasswordError("Password must not be empty!");
+            console.log(password)
+            setPasswordError(t('errors.mustInputValue'));
             validated = false;
         } else {
             setPasswordError("");
         }
         if (!isLogin && checkIfStringEmpty(name)) {
-            setNameError("Name must not be empty!");
+            setNameError(t('errors.mustInputValue'));
             validated = false;
         } else {
             setNameError("");
         }
         return validated;
     }
+
+    console.log(passwordError);
 
     const clearAllStates = () => {
         setName('');
@@ -139,6 +143,16 @@ const LoginPage: React.FC = () => {
         setPasswordError('');
     }
 
+    const handleKeyDown = (event: any) => {
+        if (event.key === 'Enter') {
+            if (isLogin) {
+                login()
+            } else {
+                signUp()
+            }
+        }
+    }
+
     if (isLoading) {
         return <LoadingPage />;
     }
@@ -149,30 +163,32 @@ const LoginPage: React.FC = () => {
             <ToastContainer />
             <br />
             <div className="titleContainer">
-                <p className="welcomeText">{t('pageTitle')}</p>
+                <p className="welcomeText">{t('titles.pageTitle')}</p>
             </div>
             <br />
             {isLogin ? (
                 <div>
                     <div className="formItem">
-                        <label className="inputLabel">{t('email')}:</label>
+                        <label className="inputLabel">{t('labels.email')}:</label>
                         <div className="inputContainer">
                             <input
                                 className="inputBox"
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
+                                onKeyDown={e => handleKeyDown(e)}
                             />
                         </div>
                         <label className="errorLabel">{emailError}</label>
                     </div>
                     <div className="formItem">
-                        <label className="inputLabel">{t('password')}:</label>
+                        <label className="inputLabel">{t('labels.password')}:</label>
                         <div className="inputContainer">
                             <input
                                 className="inputBoxWithButton"
                                 type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
+                                onKeyDown={e => handleKeyDown(e)}
                             />
                             <button type="button" className="iconButton" onClick={toggleShowPassword}>
                                 {showPassword ?
@@ -184,44 +200,47 @@ const LoginPage: React.FC = () => {
                     </div>
                     <br />
                     <div className="buttonContainer">
-                        <button className="login" onClick={() => login()}>{t('login')}</button>
+                        <button className="login" onClick={() => login()}>{t('buttons.login')}</button>
                         <button className="signUp" onClick={() => {
                             setIsLogin(false);
                             clearAllStates();
-                        }}>{t('signUp')}</button>
+                        }}>{t('buttons.signUp')}</button>
                     </div>
                 </div>
             ) : (
                 <div>
                     <div className="formItem">
-                        <label className="inputLabel">{t('name')}:</label>
+                        <label className="inputLabel">{t('labels.name')}:</label>
                         <div className="inputContainer">
                             <input
                                 className="inputBox"
                                 value={name}
                                 onChange={e => setName(e.target.value)}
+                                onKeyDown={e => handleKeyDown(e)}
                             />
                         </div>
                         <label className="errorLabel">{nameError}</label>
                     </div>
                     <div className="formItem">
-                        <label className="inputLabel">{t('email')}:</label>
+                        <label className="inputLabel">{t('labels.email')}:</label>
                         <div className="inputContainer">
                             <input
                                 className="inputBox"
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
+                                onKeyDown={e => handleKeyDown(e)}
                             />
                         </div>
                         <label className="errorLabel">{emailError}</label>
                     </div>
                     <div className="formItem">
-                        <label className="inputLabel">{t('password')}:</label>
+                        <label className="inputLabel">{t('labels.password')}:</label>
                         <div className="inputContainer">
                             <input
                                 className="inputBoxWithButton"
                                 type={showPassword ? "text" : "password"}
                                 onChange={e => setPassword(e.target.value)}
+                                onKeyDown={e => handleKeyDown(e)}
                             />
                             <button
                                 className="iconButton"
@@ -236,12 +255,12 @@ const LoginPage: React.FC = () => {
                     <br />
                     <div className="buttonContainer">
                         <button className={isLogin ? "signUp" : "login"} onClick={() => signUp()}>
-                            {t('signUp')}
+                            {t('buttons.signUp')}
                         </button>
                         <button className="back" onClick={() => {
                             setIsLogin(true);
                             clearAllStates();
-                        }}>{t('back')}</button>
+                        }}>{t('buttons.back')}</button>
                     </div>
                 </div>
             )

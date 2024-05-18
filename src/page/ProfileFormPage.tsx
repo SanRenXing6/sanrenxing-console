@@ -51,7 +51,7 @@ const ProfileFormPage: React.FC = () => {
 
     const addSkills = () => {
         if (!skillName || skillName?.length === 0) {
-            setSkillError(t('required'));
+            setSkillError(t('errors.mustInputValue'));
             return;
         } else {
             setSkillError("");
@@ -126,40 +126,40 @@ const ProfileFormPage: React.FC = () => {
                     <input className="uploadFile" type='file' onChange={handleFileChange} />
                 </div>
                 <div className="formField">
-                    <label className="fieldLabel">{`${t('email')}: ${location?.state?.email}`}</label>
+                    <label className="fieldLabel">{`${t('labels.email')}: ${location?.state?.email}`}</label>
                 </div>
                 <div className="formField">
-                    <label className="fieldLabel">{t('description')}:</label>
+                    <label className="fieldLabel">{t('messages.description')}:</label>
                     <textarea
                         value={description}
                         className="fieldInputMultiLine"
                         onChange={handleDescriptionChange}
-                        placeholder={t('selfIntroduction')}
+                        placeholder={t('messages.selfIntroduction')}
                     />
                 </div>
                 <div className="formField">
-                    <label className="fieldLabel">{t('needs')}:</label>
+                    <label className="fieldLabel">{t('labels.needs')}:</label>
                     <textarea
                         value={needs}
                         className="fieldInputMultiLine"
                         onChange={handleNeedsChange}
-                        placeholder={t('describeNeeds')}
+                        placeholder={t('messages.describeNeeds')}
                     />
                 </div>
                 <div className="formField">
-                    <label className="fieldLabel">{t('skills')}:</label>
+                    <label className="fieldLabel">{t('labels.skills')}:</label>
                     {skills?.map((item, idx) => {
                         const isLastOne = idx === skills.length - 1;
                         return (
                             <div className="skillRow" key={idx}>
-                                <label className="subFieldLabel">{t('name')}:</label>
+                                <label className="subFieldLabel">{t('labels.name')}:</label>
                                 <input
                                     className="skillNameInput"
                                     value={isLastOne ? skillName : item?.name}
                                     disabled={!isLastOne}
                                     onChange={e => setSkillName(e.target.value)}
                                 />
-                                <label className="subFieldLabel">{t('rate')}(1-10):</label>
+                                <label className="subFieldLabel">{t('labels.rate')}(1-10):</label>
                                 <input
                                     className="skillRateInput"
                                     type="number"
@@ -185,8 +185,8 @@ const ProfileFormPage: React.FC = () => {
                 </div>
             </div>
             <div className="profileButtons">
-                <button className="save" onClick={() => handleSubmit()}>{t('save')}</button>
-                <button className="skip" onClick={() => navigateToOverview()}>{t('skip')}</button>
+                <button className="save" onClick={() => handleSubmit()}>{t('buttons.save')}</button>
+                <button className="skip" onClick={() => navigateToOverview()}>{t('buttons.skip')}</button>
             </div>
         </div>
     );

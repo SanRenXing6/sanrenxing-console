@@ -7,7 +7,7 @@ const LoadingPage = () => {
     return (
         <div className="loading-page">
             <div className="spinner"></div>
-            <p className='loading-text'>{t('loading')}</p>
+            <p className='loading-text'>{t('messages.loading')}</p>
         </div>
     );
 }

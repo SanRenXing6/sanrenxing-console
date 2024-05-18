@@ -28,16 +28,20 @@ const OverviewPage: React.FC = () => {
 
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
-            setShowProfiles(true);
-            request(
-                "GET",
-                `/search/${inputValue}`,
-                {}
-            ).then((response) => {
-                setProfileData(response?.data);
-                console.log(response?.data);
-            });
+            refetchProfiles(inputValue);
         }
+    }
+
+    const refetchProfiles = (skill: string) => {
+        setShowProfiles(true);
+        request(
+            "GET",
+            `/search/${skill}`,
+            {}
+        ).then((response) => {
+            setProfileData(response?.data);
+            console.log(response?.data);
+        });
     }
 
     const handleInputChange = (value: string) => {
@@ -60,7 +64,7 @@ const OverviewPage: React.FC = () => {
                 <div className="input-wrapper">
                     <FaSearch id="search-icon" />
                     <input
-                        placeholder={t('typeToSearch')}
+                        placeholder={t('messages.typeToSearch')}
                         value={inputValue}
                         onChange={(e) => handleInputChange(e.target.value)}
                         onBlur={(e) => { handleInputBlur(e) }}
@@ -74,6 +78,7 @@ const OverviewPage: React.FC = () => {
                                 className="search-result"
                                 onClick={() => {
                                     setInputValue(result.trim());
+                                    refetchProfiles(result.trim());
                                     setSkillResult([]);
                                 }}
                             >
@@ -88,9 +93,7 @@ const OverviewPage: React.FC = () => {
                 <div className="profile-list">
                     {
                         profileData.map((profile: any, id: any) => {
-                            return <div key={id}>
-                                <ProfileCard data={profile} />
-                            </div>
+                            return <ProfileCard key={id} data={profile} />
                         })
                     }
                 </div>

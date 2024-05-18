@@ -187,6 +187,13 @@
     overflow-y: auto;
 }
 
+.profile-card:hover {
+    height: 152px;
+    width: 272px;
+    border: 2px solid rgb(76, 147, 150);
+    box-shadow: 0 4px 8px #ddd;
+}
+
 .profile-left {
     display: flex;
     flex-direction: column;
@@ -223,7 +230,7 @@
 .profile-name {
     display: flex;
     justify-self: flex-start;
-    font-size: 1.2rem;
+    font-size: 1.0rem;
     font-weight: bold;
     margin-bottom: 5px;
 }
@@ -231,25 +238,26 @@
 .profile-description {
     display: flex;
     justify-self: flex-start;
+    text-align: left;
     color: #666;
-    font-size: 1.0rem;
+    font-size: 0.8rem;
 }
 
 .profile-card-label {
     display: flex;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     margin-top: 10px;
     justify-content: flex-start;
 }
 
 .profile-skill-name {
     display: flex;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     justify-content: flex-start;
 }
 
 .profile-needs {
     display: flex;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     justify-content: flex-start;
 }

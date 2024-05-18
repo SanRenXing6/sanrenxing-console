@@ -33,13 +33,13 @@ export const AppHeader: React.FC = () => {
         <div className="App-header" >
             <div className="headerLeft">
                 <img src={logo} className="headerLogo" alt="logo" />
-                <text className="headerText">{t('sanRenXing')}</text >
+                <text className="headerText">{t('titles.sanRenXing')}</text >
             </div>
             <div className="headerRight">
                 <LanguageSelect />
                 {hasUser &&
                     <>
-                        <button className="logoutBtn" onClick={() => logout()}>{t('logOut')}</button>
+                        <button className="logoutBtn" onClick={() => logout()}>{t('buttons.logOut')}</button>
                         <img className="profileImg" src={image} alt="Loaded from server" />
                     </>
                 }
