@@ -4,6 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import "../asset/overview.css"
 import { useTranslation } from 'react-i18next';
 import ProfileCard from "../component/ProfileCard";
+import WebRTCVoiceCall from "../component/WebRTCVoiceCall";
 
 const OverviewPage: React.FC = () => {
     const { t } = useTranslation();
@@ -99,6 +100,7 @@ const OverviewPage: React.FC = () => {
                 </div>
             </div>
             }
+            <WebRTCVoiceCall />
         </div>
     );
 }
