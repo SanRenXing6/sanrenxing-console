@@ -112,7 +112,6 @@ const LoginPage: React.FC = () => {
             setEmailError("");
         }
         if (checkIfStringEmpty(password)) {
-            console.log(password)
             setPasswordError(t('errors.mustInputValue'));
             validated = false;
         } else {
@@ -126,8 +125,6 @@ const LoginPage: React.FC = () => {
         }
         return validated;
     }
-
-    console.log(passwordError);
 
     const clearAllStates = () => {
         setName('');

@@ -52,15 +52,13 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
         <div className="profile-card">
             <div className="profile-left">
                 <img className="profile-img" src={imageUrl || userProfileImg}></img>
+                <WebRTC />
                 <div className="profile-rate">
                     {getStars(userRate)}
                 </div>
             </div>
             <div className="profile-right">
-                <div className="profile-name-container">
-                    <div className="profile-name">{userName}</div>
-                    <WebRTC />
-                </div>
+                <div className="profile-name">{userName}</div>
                 <div className="profile-description">{data?.description}</div>
                 <div className="profile-card-label">{t('labels.needs')}</div>
                 <div className="profile-needs">{data?.needs}</div>

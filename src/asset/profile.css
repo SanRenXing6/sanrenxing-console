@@ -175,7 +175,7 @@
 
 .profile-card {
     background-color: white;
-    height: 150px;
+    height: 180px;
     width: 270px;
     border-radius: 8px;
     border: 1px solid rgb(76, 147, 150);
@@ -188,7 +188,7 @@
 }
 
 .profile-card:hover {
-    height: 152px;
+    height: 182px;
     width: 272px;
     border: 2px solid rgb(76, 147, 150);
     box-shadow: 0 4px 8px #ddd;
@@ -207,7 +207,6 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    margin-bottom: 20px;
 }
 
 .profile-rate {
@@ -227,19 +226,19 @@
     padding-left: 40px;
 }
 
-.profile-name-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    margin-bottom: 5px;
-}
-
 .profile-name {
     display: flex;
     justify-self: flex-start;
     font-size: 1.0rem;
     font-weight: bold;
+}
+
+.connect-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
 }
 
 .call-button {
@@ -260,8 +259,30 @@
 
 .call-icon:hover {
     color: rgb(76, 147, 150);
-    width: 23px;
-    height: 23px;
+    width: 20px;
+    height: 20px;
+}
+
+.text-button {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    background-color: inherit;
+    border: none !important;
+    width: auto;
+    height: auto;
+}
+
+.text-icon {
+    color: rgb(76, 147, 150);
+    width: 18px;
+    height: 18px;
+}
+
+.text-icon:hover {
+    color: rgb(76, 147, 150);
+    width: 20px;
+    height: 20px;
 }
 
 .profile-description {
