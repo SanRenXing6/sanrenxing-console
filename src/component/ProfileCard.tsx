@@ -6,6 +6,7 @@ import { request } from "../util/AxiosHelper";
 import { retriveImage } from "../util/ImageHelper";
 import { FaStar } from "react-icons/fa";
 import { getRandomInt } from "../util/NumberHelper";
+import WebRTC from "./WebRTC";
 
 interface Props {
     data: any
@@ -56,7 +57,10 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
                 </div>
             </div>
             <div className="profile-right">
-                <div className="profile-name">{userName}</div>
+                <div className="profile-name-container">
+                    <div className="profile-name">{userName}</div>
+                    <WebRTC />
+                </div>
                 <div className="profile-description">{data?.description}</div>
                 <div className="profile-card-label">{t('labels.needs')}</div>
                 <div className="profile-needs">{data?.needs}</div>

@@ -111,7 +111,6 @@ const LoginPage: React.FC = () => {
         } else {
             setEmailError("");
         }
-        console.log(password)
         if (checkIfStringEmpty(password)) {
             console.log(password)
             setPasswordError(t('errors.mustInputValue'));

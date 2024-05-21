@@ -227,12 +227,41 @@
     padding-left: 40px;
 }
 
+.profile-name-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 5px;
+}
+
 .profile-name {
     display: flex;
     justify-self: flex-start;
     font-size: 1.0rem;
     font-weight: bold;
-    margin-bottom: 5px;
+}
+
+.call-button {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    background-color: inherit;
+    border: none !important;
+    width: auto;
+    height: auto;
+}
+
+.call-icon {
+    color: rgb(76, 147, 150);
+    width: 18px;
+    height: 18px;
+}
+
+.call-icon:hover {
+    color: rgb(76, 147, 150);
+    width: 23px;
+    height: 23px;
 }
 
 .profile-description {
