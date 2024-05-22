@@ -4,6 +4,8 @@ import { FaSearch } from "react-icons/fa";
 import "../asset/overview.css"
 import { useTranslation } from 'react-i18next';
 import ProfileCard from "../component/ProfileCard";
+import { getWebSocket } from "../util/WebSocketHelper";
+import { refreshToken } from "../util/AuthHelper";
 
 const OverviewPage: React.FC = () => {
     const { t } = useTranslation();
@@ -13,6 +15,8 @@ const OverviewPage: React.FC = () => {
     const [profileData, setProfileData] = React.useState<any[]>([]);
     const resultsRef = React.useRef<HTMLDivElement>(null);
     const [showProfiles, setShowProfiles] = React.useState(false);
+    const userId = localStorage.getItem('userId') || '';
+    const webSocket = getWebSocket(userId);
 
     React.useEffect(() => {
         // fetch skills
@@ -23,8 +27,16 @@ const OverviewPage: React.FC = () => {
         ).then((response) => {
             const data = response?.data?.map((skill: any) => skill.name);
             setSkillData(data);
-        }).catch(error => console.log(error));
-    }, []);
+        }).catch(
+            error => {
+                if (error?.message?.includes("403")) {
+                    refreshToken();
+                } else {
+                    console.error(error?.message);
+                }
+            }
+        );
+    }, [refreshToken]);
 
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
@@ -91,8 +103,8 @@ const OverviewPage: React.FC = () => {
             {showProfiles && <div className="profile-list-container">
                 <div className="profile-list">
                     {
-                        profileData.map((profile: any, id: any) => {
-                            return <ProfileCard key={id} data={profile} />
+                        profileData.map((profile: any) => {
+                            return <ProfileCard key={profile.id} data={profile} webSocket={webSocket} />
                         })
                     }
                 </div>

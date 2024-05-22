@@ -6,6 +6,9 @@ import defaultUserIcon from "../asset/profile.png";
 import { useNavigate } from 'react-router-dom';
 import LanguageSelect from './LanguageSelect';
 import { useTranslation } from 'react-i18next';
+import { IoMailOutline } from "react-icons/io5";
+import { IoMailUnreadOutline } from "react-icons/io5";
+
 
 export const AppHeader: React.FC = () => {
     const { t } = useTranslation();
@@ -24,8 +27,7 @@ export const AppHeader: React.FC = () => {
 
     const logout = () => {
         setAuthToken('');
-        localStorage.setItem('userId', '');
-        localStorage.setItem('imageUrl', '');
+        localStorage.clear();
         navigate("/");
     }
 
@@ -37,6 +39,9 @@ export const AppHeader: React.FC = () => {
             </div>
             <div className="headerRight">
                 <LanguageSelect />
+                <button type="button" className="icon-button" >
+                    <IoMailOutline className="icon" />
+                </button>
                 {hasUser &&
                     <>
                         <button className="logoutBtn" onClick={() => logout()}>{t('buttons.logOut')}</button>

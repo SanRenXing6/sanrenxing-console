@@ -65,3 +65,17 @@
 .select-language {
     margin-right: 10px;
 }
+
+.App-header .icon-button {
+    height: 50px;
+    width: 50px;
+    border: none !important;
+    background: inherit !important;
+}
+
+.App-header .icon {
+    height: 100%;
+    width: 100%;
+    color: white;
+    stroke-width: 40 !important;
+}

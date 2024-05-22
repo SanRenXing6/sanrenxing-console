@@ -104,6 +104,8 @@ button {
     height: 32px;
     width: 280px;
     font-size: medium;
+    align-items: center;
+    justify-content: center;
     border-radius: 8px;
     padding-bottom: 2px;
     border: 2px solid rgb(76, 147, 150);
@@ -111,7 +113,9 @@ button {
     margin-bottom: 5px;
 }
 
-.inputContainer .iconButton {
+.inputContainer .icon-button {
+    display: flex;
+    align-self: center;
     height: 100%;
     width: 5%;
     border: none !important;
@@ -120,8 +124,10 @@ button {
 }
 
 .inputBox {
+    display: flex;
     height: 100%;
     width: 100%;
+    align-self: center;
     font-size: medium;
     border: none !important;
     background: inherit !important;
@@ -135,8 +141,10 @@ button {
 }
 
 .inputBoxWithButton {
+    display: flex;
     height: 100%;
     width: 95%;
+    align-self: center;
     font-size: medium;
     border: none !important;
     background: inherit !important;

@@ -8,9 +8,10 @@ import ChatModal from './ChatModal';
 interface Props {
     userId: string
     userName: string
+    webSocket: WebSocket
 }
 
-const WebRTC: React.FC<Props> = ({ userId, userName }) => {
+const WebRTC: React.FC<Props> = ({ userId, userName, webSocket }) => {
     const [calling, setCalling] = useState(false);
     const [openChat, setOpenChat] = useState(false);
 
@@ -48,9 +49,11 @@ const WebRTC: React.FC<Props> = ({ userId, userName }) => {
             </button>
             {openChat &&
                 <ChatModal
+                    isSender={true}
                     onClose={() => { setOpenChat(false) }}
                     toUserId={userId}
                     toUserName={userName}
+                    webSocket={webSocket}
                 />
             }
 

@@ -9,10 +9,11 @@ import { getRandomInt } from "../util/NumberHelper";
 import WebRTC from "./WebRTC";
 
 interface Props {
-    data: any
+    data: any,
+    webSocket: WebSocket
 }
 
-const ProfileCard: React.FC<Props> = ({ data }) => {
+const ProfileCard: React.FC<Props> = ({ data, webSocket }) => {
     const { t } = useTranslation();
     const [userName, setUserName] = React.useState("");
     const [userRate, setUserRate] = React.useState(1);
@@ -52,7 +53,11 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
         <div className="profile-card">
             <div className="profile-left">
                 <img className="profile-img" src={imageUrl || userProfileImg}></img>
-                <WebRTC userId={data?.userId} userName={userName} />
+                <WebRTC
+                    userId={data?.userId}
+                    userName={userName}
+                    webSocket={webSocket}
+                />
                 <div className="profile-rate">
                     {getStars(userRate)}
                 </div>

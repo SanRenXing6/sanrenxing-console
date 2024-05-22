@@ -34,9 +34,6 @@ const LoginPage: React.FC = () => {
 
     // TODO: learn how to deal with global values when navigate back and forth
     React.useEffect(() => {
-        localStorage.setItem('userId', '');
-        localStorage.setItem('profileId', '');
-        localStorage.setItem('imageUrl', '');
         setAuthToken('');
         // eslint-disable-next-line
     }, [])
@@ -186,7 +183,7 @@ const LoginPage: React.FC = () => {
                                 onChange={e => setPassword(e.target.value)}
                                 onKeyDown={e => handleKeyDown(e)}
                             />
-                            <button type="button" className="iconButton" onClick={toggleShowPassword}>
+                            <button type="button" className="icon-button" onClick={toggleShowPassword}>
                                 {showPassword ?
                                     <FaEyeSlash /> :
                                     <FaEye />}
@@ -239,7 +236,7 @@ const LoginPage: React.FC = () => {
                                 onKeyDown={e => handleKeyDown(e)}
                             />
                             <button
-                                className="iconButton"
+                                className="icon-button"
                                 onClick={toggleShowPassword}>
                                 {showPassword ?
                                     <FaEyeSlash /> :

@@ -170,11 +170,11 @@ const ProfileFormPage: React.FC = () => {
                                     value={isLastOne ? skillRate : item?.rate}
                                 />
                                 {isLastOne ?
-                                    <button type="button" className="iconButton" onClick={() => addSkills()}>
+                                    <button type="button" className="icon-button" onClick={() => addSkills()}>
                                         <IoAddCircleOutline className="addSkillIcon" />
                                     </button>
                                     :
-                                    <button type="button" className="iconButton" onClick={() => removeSkill(idx)}>
+                                    <button type="button" className="icon-button" onClick={() => removeSkill(idx)}>
                                         <IoCloseCircleOutline className="removeSkillIcon" />
                                     </button>
                                 }

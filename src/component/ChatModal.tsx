@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import '../asset/chat.css';
+import { request } from '../util/AxiosHelper';
+import { configWebSocket } from '../util/WebSocketHelper';
 
 Modal.setAppElement('#root');
 
 interface Props {
-    toUserId: string
-    toUserName: string
+    isSender: boolean
+    toUserId?: string
+    toUserName?: string
+    webSocket: WebSocket
     onClose: () => void
 }
 
@@ -31,38 +35,32 @@ const customStyles = {
     },
 };
 
-const ChatModal: React.FC<Props> = ({ toUserId, toUserName, onClose }) => {
-    const [socket, setSocket] = useState<WebSocket>();
+const ChatModal: React.FC<Props> = ({ isSender, toUserId, toUserName, webSocket, onClose }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputMessage, setInputMessage] = useState<string>('');
+    const [myUserName, setMyUserName] = useState<string>('');
+    const [fromUserName, setFromUserName] = useState<string>('');
     const myUserId = localStorage.getItem('userId');
 
     useEffect(() => {
-        const socketConnection = new WebSocket('ws://localhost:8080/api/v1/chat?userId=' + myUserId);
 
-        socketConnection.onopen = () => {
-            console.log('WebSocket connection established');
-        };
+        request(
+            "GET",
+            `/users/${myUserId}`,
+            {}
+        ).then((response) => {
+            setMyUserName(response?.data?.name || "user")
+        }).catch(error => console.log(error));
 
-        socketConnection.onmessage = (event) => {
-            const message = event.data;
-            setMessages((prevMessages) => [...prevMessages, { isMe: false, data: message }]);
-        };
+        configWebSocket(webSocket);
 
-        socketConnection.onclose = () => {
-            console.log('WebSocket connection closed');
-        };
-
-        socketConnection.onerror = (error) => {
-            console.error('WebSocket error: ', error);
-        };
-
-        setSocket(socketConnection);
-
-        return () => {
-            if (socketConnection) {
-                socketConnection.close();
-            }
+        // Customized deal with message when receive any messages
+        webSocket.onmessage = (event) => {
+            const messageData = event.data?.split(":");
+            const userName = messageData[0];
+            const content = messageData[1];
+            setFromUserName(userName);
+            setMessages((prevMessages) => [...prevMessages, { isMe: false, data: content }]);
         };
     }, []);
 
@@ -73,9 +71,9 @@ const ChatModal: React.FC<Props> = ({ toUserId, toUserName, onClose }) => {
     }
 
     const sendMessage = () => {
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            const payload = `${toUserId}:${inputMessage}`;
-            socket.send(payload);
+        if (webSocket && webSocket.readyState === WebSocket.OPEN) {
+            const payload = `${myUserName}:${toUserId}:${inputMessage}`;
+            webSocket.send(payload);
             setMessages((prevMessages) => [...prevMessages, { isMe: true, data: inputMessage }]);
             setInputMessage('');
         }
@@ -89,7 +87,7 @@ const ChatModal: React.FC<Props> = ({ toUserId, toUserName, onClose }) => {
             style={customStyles}
         >
             <div className="chat-container">
-                <h1>Chat</h1>
+                <h4>Messages with {isSender ? toUserName : fromUserName}</h4>
                 <div className="messages">
                     {messages.map((message, index) => (
                         <div key={index}
