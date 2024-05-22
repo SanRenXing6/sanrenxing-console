@@ -23,7 +23,7 @@ const OverviewPage: React.FC = () => {
         ).then((response) => {
             const data = response?.data?.map((skill: any) => skill.name);
             setSkillData(data);
-        });
+        }).catch(error => console.log(error));
     }, []);
 
     const handleKeyDown = (event: any) => {
@@ -40,7 +40,7 @@ const OverviewPage: React.FC = () => {
             {}
         ).then((response) => {
             setProfileData(response?.data);
-        });
+        }).catch(error => console.log(error));
     }
 
     const handleInputChange = (value: string) => {

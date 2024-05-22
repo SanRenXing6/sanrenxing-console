@@ -33,7 +33,7 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
             {}
         ).then((response) => {
             setUserName(response?.data?.name || "user")
-        });
+        }).catch(error => console.log(error));
         const fetchImageData = async () => {
             try {
                 const image = await retriveImage(data?.imageId);
@@ -52,7 +52,7 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
         <div className="profile-card">
             <div className="profile-left">
                 <img className="profile-img" src={imageUrl || userProfileImg}></img>
-                <WebRTC userId={data?.userId} />
+                <WebRTC userId={data?.userId} userName={userName} />
                 <div className="profile-rate">
                     {getStars(userRate)}
                 </div>
