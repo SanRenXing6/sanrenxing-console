@@ -1,14 +1,14 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
 interface MessageContextType {
-    messages: string[];
-    addMessages: (message: string) => void;
+    messages: Message[];
+    addMessages: (message: Message) => void;
     clearMessages: () => void;
 }
 
 const MessageContext = createContext<MessageContextType>({
     messages: [],
-    addMessages: (message: string) => { },
+    addMessages: (message: Message) => { },
     clearMessages: () => { }
 });
 
@@ -16,13 +16,17 @@ interface MessageProviderProps {
     children: ReactNode;
 }
 
+export interface Message {
+    isMe: boolean
+    data: string
+}
+
 export const useMessage = () => useContext(MessageContext);
 
 export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) => {
-    const [messages, setMessages] = useState<string[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
 
-    const addMessages = (messages: string) => {
-        console.log("adding", messages)
+    const addMessages = (messages: Message) => {
         setMessages(prevMessages => [...prevMessages, messages])
     }
 

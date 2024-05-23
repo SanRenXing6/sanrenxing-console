@@ -122,7 +122,6 @@ const OverviewPage: React.FC = () => {
             }
             <ChatModal
                 isOpen={isModalOpen}
-                isSender={false}
                 onClose={closeModal}
                 webSocket={webSocket}
             />

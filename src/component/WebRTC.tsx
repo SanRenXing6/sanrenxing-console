@@ -49,7 +49,6 @@ const WebRTC: React.FC<Props> = ({ userId, userName, webSocket }) => {
             </button>
             <ChatModal
                 isOpen={openChat}
-                isSender={true}
                 onClose={() => { setOpenChat(false) }}
                 toUserId={userId}
                 webSocket={webSocket}

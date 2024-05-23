@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import '../asset/chat.css';
-import { useMessage } from '../context/MessageContext';
+import { Message, useMessage } from '../context/MessageContext';
 import { refreshToken } from '../util/AuthHelper';
 import { request } from '../util/AxiosHelper';
 import { configWebSocket } from '../util/WebSocketHelper';
@@ -10,15 +10,9 @@ Modal.setAppElement('#root');
 
 interface Props {
     isOpen: boolean
-    isSender: boolean
     toUserId?: string
     webSocket: WebSocket
     onClose: () => void
-}
-
-interface Message {
-    isMe: boolean
-    data: string
 }
 
 const customStyles = {
@@ -44,11 +38,7 @@ const ChatModal: React.FC<Props> = ({ isOpen, toUserId, webSocket, onClose }) =>
     const [toUser, setToUser] = useState(toUserId);
     const myUserId = localStorage.getItem('userId');
     const { messages, addMessages, clearMessages } = useMessage();
-    const [messageList, setMessageList] = useState<Message[]>(
-        messages?.map((msg) => ({
-            isMe: false,
-            data: msg
-        })));
+    const [messageList, setMessageList] = useState<Message[]>(messages);
 
     useEffect(() => {
         request(
@@ -73,9 +63,9 @@ const ChatModal: React.FC<Props> = ({ isOpen, toUserId, webSocket, onClose }) =>
             const userName = messageData[1];
             const userId = messageData[2];
             const content = messageData[3];
-            const msg = `${userName}: ${content}`;
+            const msg = { isMe: false, data: `${userName}: ${content}` };
             setToUser(userId);
-            setMessageList((prevMessages) => [...prevMessages, { isMe: false, data: msg }]);
+            setMessageList((prevMessages) => [...prevMessages, msg]);
             addMessages(msg);
         };
     }, [refreshToken]);
@@ -87,13 +77,13 @@ const ChatModal: React.FC<Props> = ({ isOpen, toUserId, webSocket, onClose }) =>
     }
 
     const sendMessage = () => {
-        console.log('sending')
         if (webSocket && webSocket.readyState === WebSocket.OPEN && inputMessage?.length > 0) {
             const payload = `${toUser}:${myUserName}:${myUserId}:${inputMessage}`;
             webSocket.send(payload);
-            setMessageList((prevMessages) => [...prevMessages, { isMe: true, data: inputMessage }]);
+            const msg = { isMe: true, data: inputMessage };
+            setMessageList((prevMessages) => [...prevMessages, msg]);
+            addMessages(msg);
             setInputMessage('');
-            console.log(payload)
         }
     };
 
