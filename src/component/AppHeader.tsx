@@ -7,20 +7,20 @@ import { useNavigate } from 'react-router-dom';
 import LanguageSelect from './LanguageSelect';
 import { useTranslation } from 'react-i18next';
 import { IoMailUnreadOutline } from "react-icons/io5";
-import { loadMessageList } from '../util/MessageHelper';
 import { useModal } from '../context/ModalContext';
+import { useMessage } from '../context/MessageContext';
 
 
 export const AppHeader: React.FC = () => {
     const { t } = useTranslation();
     const imageUrl = localStorage.getItem('imageUrl');
     const userId = localStorage.getItem('userId');
-    const messages = loadMessageList("messages");
     const hasImage = imageUrl && imageUrl?.length > 0;
     const hasUser = userId && userId?.length > 0;
     const image = hasImage ? imageUrl : defaultUserIcon;
     const navigate = useNavigate();
     const { openModal } = useModal();
+    const { messages } = useMessage();
 
     React.useEffect(() => {
         if (!userId || userId?.length === 0) {
