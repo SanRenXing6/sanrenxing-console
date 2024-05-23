@@ -6,6 +6,10 @@ import { useTranslation } from 'react-i18next';
 import ProfileCard from "../component/ProfileCard";
 import { getWebSocket } from "../util/WebSocketHelper";
 import { refreshToken } from "../util/AuthHelper";
+import ChatModal from "../component/ChatModal";
+import { useNavigate } from "react-router-dom";
+import { stringToBoolean } from "../util/StringHelper";
+import { useModal } from "../context/ModalContext";
 
 const OverviewPage: React.FC = () => {
     const { t } = useTranslation();
@@ -17,8 +21,14 @@ const OverviewPage: React.FC = () => {
     const [showProfiles, setShowProfiles] = React.useState(false);
     const userId = localStorage.getItem('userId') || '';
     const webSocket = getWebSocket(userId);
+    const navigate = useNavigate();
+    const { isModalOpen, closeModal } = useModal();
+
 
     React.useEffect(() => {
+        if (!userId || userId?.length === 0) {
+            navigate("/login")
+        }
         // fetch skills
         request(
             "GET",
@@ -110,6 +120,12 @@ const OverviewPage: React.FC = () => {
                 </div>
             </div>
             }
+            <ChatModal
+                isOpen={isModalOpen}
+                isSender={false}
+                onClose={closeModal}
+                webSocket={webSocket}
+            />
         </div>
     );
 }

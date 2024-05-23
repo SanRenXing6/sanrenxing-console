@@ -6,6 +6,7 @@ import LoginPage from './LoginPage';
 import OverviewPage from './OverviewPage';
 import i18n from '../asset/i18n';
 import ProfileFormPage from './ProfileFormPage';
+import { ModalProvider } from '../context/ModalContext';
 
 const HomePage = () => {
 
@@ -17,15 +18,17 @@ const HomePage = () => {
   return (
     <div className="App">
       <BrowserRouter>
-        <AppHeader />
-        <div className="App-body">
-          <Routes>
-            <Route path="/" element={<Navigate replace to="/login" />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/overview" element={<OverviewPage />} />
-            <Route path="/profile" element={<ProfileFormPage />} />
-          </Routes>
-        </div>
+        <ModalProvider>
+          <AppHeader />
+          <div className="App-body">
+            <Routes>
+              <Route path="/" element={<Navigate replace to="/overview" />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/overview" element={<OverviewPage />} />
+              <Route path="/profile" element={<ProfileFormPage />} />
+            </Routes>
+          </div>
+        </ModalProvider>
       </BrowserRouter>
     </div>
   );

@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import '../asset/chat.css';
 import { request } from '../util/AxiosHelper';
+import { addItemToMessageList } from '../util/JsonHelper';
 import { configWebSocket } from '../util/WebSocketHelper';
 
 Modal.setAppElement('#root');
 
 interface Props {
+    isOpen: boolean
     isSender: boolean
     toUserId?: string
     toUserName?: string
@@ -35,7 +37,7 @@ const customStyles = {
     },
 };
 
-const ChatModal: React.FC<Props> = ({ isSender, toUserId, toUserName, webSocket, onClose }) => {
+const ChatModal: React.FC<Props> = ({ isOpen, isSender, toUserId, toUserName, webSocket, onClose }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputMessage, setInputMessage] = useState<string>('');
     const [myUserName, setMyUserName] = useState<string>('');
@@ -61,6 +63,7 @@ const ChatModal: React.FC<Props> = ({ isSender, toUserId, toUserName, webSocket,
             const content = messageData[1];
             setFromUserName(userName);
             setMessages((prevMessages) => [...prevMessages, { isMe: false, data: content }]);
+            addItemToMessageList('messages', content);
         };
     }, []);
 
@@ -81,7 +84,7 @@ const ChatModal: React.FC<Props> = ({ isSender, toUserId, toUserName, webSocket,
 
     return (
         <Modal
-            isOpen={true}
+            isOpen={isOpen}
             onRequestClose={onClose}
             contentLabel="Chat"
             style={customStyles}

@@ -47,16 +47,14 @@ const WebRTC: React.FC<Props> = ({ userId, userName, webSocket }) => {
                         : <IoIosCall className="call-icon" />
                 }
             </button>
-            {openChat &&
-                <ChatModal
-                    isSender={true}
-                    onClose={() => { setOpenChat(false) }}
-                    toUserId={userId}
-                    toUserName={userName}
-                    webSocket={webSocket}
-                />
-            }
-
+            <ChatModal
+                isOpen={openChat}
+                isSender={true}
+                onClose={() => { setOpenChat(false) }}
+                toUserId={userId}
+                toUserName={userName}
+                webSocket={webSocket}
+            />
         </div>
     );
 };
