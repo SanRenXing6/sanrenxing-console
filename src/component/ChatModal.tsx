@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import '../asset/chat.css';
+import { refreshToken } from '../util/AuthHelper';
 import { request } from '../util/AxiosHelper';
-import { addItemToMessageList } from '../util/JsonHelper';
+import { addItemToMessageList, loadMessageList } from '../util/MessageHelper';
 import { configWebSocket } from '../util/WebSocketHelper';
 
 Modal.setAppElement('#root');
@@ -11,7 +12,6 @@ interface Props {
     isOpen: boolean
     isSender: boolean
     toUserId?: string
-    toUserName?: string
     webSocket: WebSocket
     onClose: () => void
 }
@@ -37,35 +37,39 @@ const customStyles = {
     },
 };
 
-const ChatModal: React.FC<Props> = ({ isOpen, isSender, toUserId, toUserName, webSocket, onClose }) => {
-    const [messages, setMessages] = useState<Message[]>([]);
+const ChatModal: React.FC<Props> = ({ isOpen, isSender, toUserId, webSocket, onClose }) => {
+
+    const [messages, setMessages] = useState<Message[]>(loadMessageList('messages'));
     const [inputMessage, setInputMessage] = useState<string>('');
     const [myUserName, setMyUserName] = useState<string>('');
-    const [fromUserName, setFromUserName] = useState<string>('');
     const myUserId = localStorage.getItem('userId');
 
     useEffect(() => {
-
         request(
             "GET",
             `/users/${myUserId}`,
             {}
         ).then((response) => {
             setMyUserName(response?.data?.name || "user")
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            if (error?.message?.includes("403")) {
+                refreshToken();
+            } else {
+                console.error(error?.message);
+            }
+        });
 
         configWebSocket(webSocket);
 
-        // Customized deal with message when receive any messages
+        // Customized deal with message when receive messages
         webSocket.onmessage = (event) => {
             const messageData = event.data?.split(":");
             const userName = messageData[0];
             const content = messageData[1];
-            setFromUserName(userName);
-            setMessages((prevMessages) => [...prevMessages, { isMe: false, data: content }]);
+            setMessages((prevMessages) => [...prevMessages, { isMe: false, data: `${userName}: ${content}` }]);
             addItemToMessageList('messages', content);
         };
-    }, []);
+    }, [refreshToken]);
 
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
@@ -74,13 +78,18 @@ const ChatModal: React.FC<Props> = ({ isOpen, isSender, toUserId, toUserName, we
     }
 
     const sendMessage = () => {
-        if (webSocket && webSocket.readyState === WebSocket.OPEN) {
+        if (webSocket && webSocket.readyState === WebSocket.OPEN && inputMessage?.length > 0) {
             const payload = `${myUserName}:${toUserId}:${inputMessage}`;
             webSocket.send(payload);
             setMessages((prevMessages) => [...prevMessages, { isMe: true, data: inputMessage }]);
             setInputMessage('');
         }
     };
+
+    const onClear = () => {
+        localStorage.setItem("messages", "");
+        setMessages([]);
+    }
 
     return (
         <Modal
@@ -90,9 +99,10 @@ const ChatModal: React.FC<Props> = ({ isOpen, isSender, toUserId, toUserName, we
             style={customStyles}
         >
             <div className="chat-container">
-                <h4>Messages with {isSender ? toUserName : fromUserName}</h4>
+                <h4>Messages</h4>
                 <div className="messages">
                     {messages.map((message, index) => (
+                        message?.data && message?.data?.length > 0 &&
                         <div key={index}
                             className={message.isMe ? "message-right" : "message-left"}>
                             {message.data}
@@ -107,8 +117,9 @@ const ChatModal: React.FC<Props> = ({ isOpen, isSender, toUserId, toUserName, we
                     onKeyDown={e => handleKeyDown(e)}
                 />
                 <div className="button-container">
-                    <button onClick={sendMessage}>Send</button>
+                    {isSender && <button onClick={sendMessage}>Send</button>}
                     <button onClick={onClose}>Close</button>
+                    <button onClick={onClear} className={"clear-button"}>Clear</button>
                 </div>
             </div>
         </Modal>

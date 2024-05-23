@@ -8,7 +8,7 @@ import { getWebSocket } from "../util/WebSocketHelper";
 import { refreshToken } from "../util/AuthHelper";
 import ChatModal from "../component/ChatModal";
 import { useNavigate } from "react-router-dom";
-import { stringToBoolean } from "../util/StringHelper";
+
 import { useModal } from "../context/ModalContext";
 
 const OverviewPage: React.FC = () => {

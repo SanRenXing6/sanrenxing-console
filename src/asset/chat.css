@@ -64,12 +64,16 @@ input[type="text"] {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: rgb(76, 147, 150);
     color: white;
     cursor: pointer;
     margin-right: 10px;
 }
 
 .chat-container button:hover {
-    background-color: #0056b3;
+    background-color: rgb(76, 147, 150);
+}
+
+.chat-container .clear-button {
+    background-color: rgb(226, 85, 85) !important;
 }

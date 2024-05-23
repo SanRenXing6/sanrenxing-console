@@ -1,5 +1,7 @@
 export const getWebSocket = (userId: string) => {
-    return new WebSocket('ws://localhost:8080/api/v1/chat?userId=' + userId);
+    const wsInstance = WebSocketSingleton.getInstance('ws://localhost:8080/api/v1/chat?userId=' + userId);
+    const socket = wsInstance.getSocket();
+    return socket;
 }
 
 export const configWebSocket = (webSocket: WebSocket) => {
@@ -14,4 +16,24 @@ export const configWebSocket = (webSocket: WebSocket) => {
     webSocket.onerror = (error) => {
         console.error('WebSocket error: ', error);
     };
+}
+
+class WebSocketSingleton {
+    private static instance: WebSocketSingleton;
+    private socket: WebSocket;
+
+    private constructor(url: string) {
+        this.socket = new WebSocket(url);
+    }
+
+    public static getInstance(url: string): WebSocketSingleton {
+        if (!WebSocketSingleton.instance) {
+            WebSocketSingleton.instance = new WebSocketSingleton(url);
+        }
+        return WebSocketSingleton.instance;
+    }
+
+    getSocket(): WebSocket {
+        return this.socket;
+    }
 }

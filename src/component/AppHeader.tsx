@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import LanguageSelect from './LanguageSelect';
 import { useTranslation } from 'react-i18next';
 import { IoMailUnreadOutline } from "react-icons/io5";
-import { loadMessageList } from '../util/JsonHelper';
+import { loadMessageList } from '../util/MessageHelper';
 import { useModal } from '../context/ModalContext';
 
 
@@ -38,11 +38,11 @@ export const AppHeader: React.FC = () => {
         <div className="App-header" >
             <div className="headerLeft">
                 <img src={logo} className="headerLogo" alt="logo" />
-                <text className="headerText">{t('titles.sanRenXing')}</text >
+                <h4 className="headerText">{t('titles.sanRenXing')}</h4 >
             </div>
             <div className="headerRight">
                 <LanguageSelect />
-                {messages && messages.length > 0 &&
+                {messages && messages?.length > 0 &&
                     <button type="button" className="icon-button" onClick={openModal}>
                         <IoMailUnreadOutline className="icon" />
                     </button>

@@ -72,11 +72,13 @@ const ProfileFormPage: React.FC = () => {
         let imageId = '';
         let savedSkills = skills;
         setIsLoading(true);
+        // Upload image
         if (hasImage) {
             imageId = await uploadImage(image);
         }
+        // Add skills
         if (skillName && skillName.length > 0) {
-            // add the last one
+            // Add the last one
             savedSkills = insert(savedSkills,
                 savedSkills.length - 1,
                 { name: skillName, rate: skillRate }
@@ -84,6 +86,7 @@ const ProfileFormPage: React.FC = () => {
         }
         // remove the template row
         savedSkills = savedSkills.slice(0, -1);
+        // Add profile
         await addProfile(imageId, savedSkills);
         setIsLoading(false);
         navigateToOverview();

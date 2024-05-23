@@ -7,6 +7,7 @@ import { retriveImage } from "../util/ImageHelper";
 import { FaStar } from "react-icons/fa";
 import { getRandomInt } from "../util/NumberHelper";
 import WebRTC from "./WebRTC";
+import { refreshToken } from "../util/AuthHelper";
 
 interface Props {
     data: any,
@@ -34,7 +35,14 @@ const ProfileCard: React.FC<Props> = ({ data, webSocket }) => {
             {}
         ).then((response) => {
             setUserName(response?.data?.name || "user")
-        }).catch(error => console.log(error));
+        }).catch(error => {
+            if (error?.message?.includes("403")) {
+                refreshToken();
+            } else {
+                console.error(error?.message);
+            }
+        });
+
         const fetchImageData = async () => {
             try {
                 const image = await retriveImage(data?.imageId);
@@ -48,7 +56,7 @@ const ProfileCard: React.FC<Props> = ({ data, webSocket }) => {
         // TODO: use real user rate instead of random number
         setUserRate(getRandomInt(1, 5));
 
-    }, [data?.userId, data?.imageId])
+    }, [data?.userId, data?.imageId, refreshToken])
     return (
         <div className="profile-card">
             <div className="profile-left">
@@ -69,10 +77,10 @@ const ProfileCard: React.FC<Props> = ({ data, webSocket }) => {
                 <div className="profile-needs">{data?.needs}</div>
                 <div className="profile-card-label">{t('labels.skills')}</div>
                 {
-                    data?.skills?.map((skill: any) => {
+                    data?.skills?.map((skill: any, id: any) => {
                         {
                             return skill?.name && skill.name.length > 0 ?
-                                <div className="profile-skill-name">• {skill.name}</div>
+                                <div className="profile-skill-name" key={id}>• {skill.name}</div>
                                 : <></>
                         }
 
