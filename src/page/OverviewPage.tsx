@@ -24,7 +24,6 @@ const OverviewPage: React.FC = () => {
     const navigate = useNavigate();
     const { isModalOpen, closeModal } = useModal();
 
-
     React.useEffect(() => {
         if (!userId || userId?.length === 0) {
             navigate("/login")
@@ -114,7 +113,7 @@ const OverviewPage: React.FC = () => {
                 <div className="profile-list">
                     {
                         profileData.map((profile: any) => {
-                            return <ProfileCard key={profile.id} data={profile} webSocket={webSocket} />
+                            return <ProfileCard key={profile.id} data={profile}/>
                         })
                     }
                 </div>

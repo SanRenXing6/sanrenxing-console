@@ -10,7 +10,6 @@ Modal.setAppElement('#root');
 
 interface Props {
     isOpen: boolean
-    toUserId?: string
     webSocket: WebSocket
     onClose: () => void
 }
@@ -31,13 +30,12 @@ const customStyles = {
     },
 };
 
-const ChatModal: React.FC<Props> = ({ isOpen, toUserId, webSocket, onClose }) => {
-
+const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
     const [inputMessage, setInputMessage] = useState<string>('');
     const [myUserName, setMyUserName] = useState<string>('');
-    const [toUser, setToUser] = useState(toUserId);
+    const { messages, addMessages, clearMessages, toUser, updateToUser } = useMessage();
+    const [toUserState, setToUserState] = useState(toUser);
     const myUserId = localStorage.getItem('userId');
-    const { messages, addMessages, clearMessages } = useMessage();
     const [messageList, setMessageList] = useState<Message[]>(messages);
 
     useEffect(() => {
@@ -64,11 +62,15 @@ const ChatModal: React.FC<Props> = ({ isOpen, toUserId, webSocket, onClose }) =>
             const userId = messageData[2];
             const content = messageData[3];
             const msg = { isMe: false, data: `${userName}: ${content}` };
-            setToUser(userId);
+            setToUserState(userId);
             setMessageList((prevMessages) => [...prevMessages, msg]);
             addMessages(msg);
         };
-    }, [refreshToken]);
+
+        return () => {
+            onClear();
+        }
+    }, []);
 
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
@@ -78,7 +80,8 @@ const ChatModal: React.FC<Props> = ({ isOpen, toUserId, webSocket, onClose }) =>
 
     const sendMessage = () => {
         if (webSocket && webSocket.readyState === WebSocket.OPEN && inputMessage?.length > 0) {
-            const payload = `${toUser}:${myUserName}:${myUserId}:${inputMessage}`;
+            const targetUser = toUserState && toUserState?.length > 0 ? toUserState : toUser;
+            const payload = `${targetUser}:${myUserName}:${myUserId}:${inputMessage}`;
             webSocket.send(payload);
             const msg = { isMe: true, data: inputMessage };
             setMessageList((prevMessages) => [...prevMessages, msg]);
@@ -90,6 +93,7 @@ const ChatModal: React.FC<Props> = ({ isOpen, toUserId, webSocket, onClose }) =>
     const onClear = () => {
         setMessageList([]);
         clearMessages();
+        updateToUser("");
     }
 
     return (
@@ -119,7 +123,10 @@ const ChatModal: React.FC<Props> = ({ isOpen, toUserId, webSocket, onClose }) =>
                 />
                 <div className="button-container">
                     <button onClick={sendMessage}>Send</button>
-                    <button onClick={onClose}>Close</button>
+                    <button onClick={() => {
+                        updateToUser("");
+                        onClose();
+                    }}>Close</button>
                     <button onClick={onClear} className={"clear-button"}>Clear</button>
                 </div>
             </div>

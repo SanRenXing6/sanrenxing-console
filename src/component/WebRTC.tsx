@@ -3,17 +3,17 @@ import { IoIosCall } from "react-icons/io";
 import { MdCallEnd } from "react-icons/md";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import "../asset/profile.css";
-import ChatModal from './ChatModal';
+import { useModal } from '../context/ModalContext';
+import { useMessage } from '../context/MessageContext';
 
 interface Props {
     userId: string
-    userName: string
-    webSocket: WebSocket
 }
 
-const WebRTC: React.FC<Props> = ({ userId, userName, webSocket }) => {
+const WebRTC: React.FC<Props> = ({ userId }) => {
     const [calling, setCalling] = useState(false);
-    const [openChat, setOpenChat] = useState(false);
+    const { openModal } = useModal();
+    const { updateToUser } = useMessage();
 
     const callUser = () => {
         setCalling(true);
@@ -35,7 +35,10 @@ const WebRTC: React.FC<Props> = ({ userId, userName, webSocket }) => {
         <div className="connect-container">
             <button
                 className="text-button"
-                onClick={() => setOpenChat(true)}
+                onClick={() => {
+                    updateToUser(userId);
+                    openModal();
+                }}
             >
                 <IoChatboxEllipsesOutline className="text-icon" />
             </button>
@@ -47,12 +50,6 @@ const WebRTC: React.FC<Props> = ({ userId, userName, webSocket }) => {
                         : <IoIosCall className="call-icon" />
                 }
             </button>
-            <ChatModal
-                isOpen={openChat}
-                onClose={() => { setOpenChat(false) }}
-                toUserId={userId}
-                webSocket={webSocket}
-            />
         </div>
     );
 };

@@ -4,12 +4,16 @@ interface MessageContextType {
     messages: Message[];
     addMessages: (message: Message) => void;
     clearMessages: () => void;
+    toUser: string;
+    updateToUser: (toUser: string) => void;
 }
 
 const MessageContext = createContext<MessageContextType>({
     messages: [],
     addMessages: (message: Message) => { },
-    clearMessages: () => { }
+    clearMessages: () => { },
+    toUser: "",
+    updateToUser: (toUser: string) => { }
 });
 
 interface MessageProviderProps {
@@ -25,6 +29,7 @@ export const useMessage = () => useContext(MessageContext);
 
 export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) => {
     const [messages, setMessages] = useState<Message[]>([]);
+    const [toUser, setToUser] = useState<string>("");
 
     const addMessages = (messages: Message) => {
         setMessages(prevMessages => [...prevMessages, messages])
@@ -34,9 +39,14 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) =>
         setMessages([]);
     }
 
+    const updateToUser = (toUser: string) => {
+        setToUser(toUser);
+    }
+
 
     return (
-        <MessageContext.Provider value={{ messages, addMessages, clearMessages }}>
+        <MessageContext.Provider
+            value={{ messages, addMessages, clearMessages, toUser, updateToUser }}>
             {children}
         </MessageContext.Provider>
     );

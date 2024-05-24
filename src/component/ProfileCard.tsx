@@ -10,11 +10,10 @@ import WebRTC from "./WebRTC";
 import { refreshToken } from "../util/AuthHelper";
 
 interface Props {
-    data: any,
-    webSocket: WebSocket
+    data: any
 }
 
-const ProfileCard: React.FC<Props> = ({ data, webSocket }) => {
+const ProfileCard: React.FC<Props> = ({ data }) => {
     const { t } = useTranslation();
     const [userName, setUserName] = React.useState("");
     const [userRate, setUserRate] = React.useState(1);
@@ -57,14 +56,13 @@ const ProfileCard: React.FC<Props> = ({ data, webSocket }) => {
         setUserRate(getRandomInt(1, 5));
 
     }, [data?.userId, data?.imageId, refreshToken])
+
     return (
         <div className="profile-card">
             <div className="profile-left">
                 <img className="profile-img" src={imageUrl || userProfileImg}></img>
                 <WebRTC
                     userId={data?.userId}
-                    userName={userName}
-                    webSocket={webSocket}
                 />
                 <div className="profile-rate">
                     {getStars(userRate)}

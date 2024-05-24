@@ -3,7 +3,7 @@ import '../asset/header.css';
 import logo from '../asset/headerLogo.png';
 import { setAuthToken } from '../util/AxiosHelper';
 import defaultUserIcon from "../asset/profile.png";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import LanguageSelect from './LanguageSelect';
 import { useTranslation } from 'react-i18next';
 import { IoMailUnreadOutline } from "react-icons/io5";
@@ -21,6 +21,8 @@ export const AppHeader: React.FC = () => {
     const navigate = useNavigate();
     const { openModal } = useModal();
     const { messages } = useMessage();
+    const location = useLocation();
+    const isOverviewPage = location.pathname === "/overview";
 
     React.useEffect(() => {
         if (!userId || userId?.length === 0) {
@@ -42,7 +44,7 @@ export const AppHeader: React.FC = () => {
             </div>
             <div className="headerRight">
                 <LanguageSelect />
-                {messages && messages?.length > 0 &&
+                {isOverviewPage && messages && messages?.length > 0 &&
                     <button type="button" className="icon-button" onClick={openModal}>
                         <IoMailUnreadOutline className="icon" />
                     </button>
