@@ -1,14 +1,14 @@
 import * as React from 'react';
 import '../asset/header.css';
 import logo from '../asset/headerLogo.png';
-import { setAuthToken } from '../util/AxiosHelper';
+import { request, setAuthToken } from '../util/AxiosHelper';
 import defaultUserIcon from "../asset/profile.png";
 import { useLocation, useNavigate } from 'react-router-dom';
 import LanguageSelect from './LanguageSelect';
 import { useTranslation } from 'react-i18next';
 import { IoMailUnreadOutline } from "react-icons/io5";
 import { useModal } from '../context/ModalContext';
-import { useMessage } from '../context/MessageContext';
+import { dealWithResponseError } from '../util/ErrorHelper';
 
 
 export const AppHeader: React.FC = () => {
@@ -20,14 +20,23 @@ export const AppHeader: React.FC = () => {
     const image = hasImage ? imageUrl : defaultUserIcon;
     const navigate = useNavigate();
     const { openModal } = useModal();
-    const { messages } = useMessage();
     const location = useLocation();
     const isOverviewPage = location.pathname === "/overview";
+    const [messages, setMessages] = React.useState<any[]>([]);
 
     React.useEffect(() => {
         if (!userId || userId?.length === 0) {
             navigate("/login")
         }
+        request(
+            "GET",
+            `/messages/${userId}`,
+            {}
+        ).then((response) => {
+            setMessages(response?.data);
+        }).catch((error) => {
+            dealWithResponseError(error);
+        });
     }, [userId])
 
     const logout = () => {
@@ -44,7 +53,7 @@ export const AppHeader: React.FC = () => {
             </div>
             <div className="headerRight">
                 <LanguageSelect />
-                {isOverviewPage && messages && messages?.length > 0 &&
+                {isOverviewPage && messages && Object.keys(messages)?.length > 0 &&
                     <button type="button" className="icon-button" onClick={openModal}>
                         <IoMailUnreadOutline className="icon" />
                     </button>

@@ -4,7 +4,6 @@ import { MdCallEnd } from "react-icons/md";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import "../asset/profile.css";
 import { useModal } from '../context/ModalContext';
-import { useMessage } from '../context/MessageContext';
 
 interface Props {
     userId: string
@@ -13,7 +12,6 @@ interface Props {
 const WebRTC: React.FC<Props> = ({ userId }) => {
     const [calling, setCalling] = useState(false);
     const { openModal } = useModal();
-    const { updateToUser } = useMessage();
 
     const callUser = () => {
         setCalling(true);
@@ -36,7 +34,6 @@ const WebRTC: React.FC<Props> = ({ userId }) => {
             <button
                 className="text-button"
                 onClick={() => {
-                    updateToUser(userId);
                     openModal();
                 }}
             >

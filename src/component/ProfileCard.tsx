@@ -8,6 +8,7 @@ import { FaStar } from "react-icons/fa";
 import { getRandomInt } from "../util/NumberHelper";
 import WebRTC from "./WebRTC";
 import { refreshToken } from "../util/AuthHelper";
+import { dealWithResponseError } from "../util/ErrorHelper";
 
 interface Props {
     data: any
@@ -35,11 +36,7 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
         ).then((response) => {
             setUserName(response?.data?.name || "user")
         }).catch(error => {
-            if (error?.message?.includes("403")) {
-                refreshToken();
-            } else {
-                console.error(error?.message);
-            }
+            dealWithResponseError(error);
         });
 
         const fetchImageData = async () => {

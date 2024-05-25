@@ -3,21 +3,61 @@
     flex-direction: column;
     align-self: center;
     align-items: center;
-    padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 300px;
+    width: 98%;
+    height: 98%;
     margin: 0 auto;
 }
 
-.messages {
+.close-button {
+    display: flex;
+    justify-self: flex-end;
+}
+
+.modal-content {
+    display: flex;
+    width: calc(100% - 15px);
+    height: calc(100% - 10px);
+    justify-self: center;
+    flex-direction: row;
+    justify-content: space-evenly;
+    overflow: hidden;
+}
+
+.user-tabs {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    justify-self: flex-start;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-self: flex-start;
+}
+
+.user-tab {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    background-color: rgb(205, 203, 203);
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.user-messages {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 100%
+}
+
+.message-list {
     display: flex;
     flex-direction: column;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 100%;
-    height: 300px;
-    overflow-y: auto;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
     margin-bottom: 10px;
     padding: 10px;
     background-color: #f9f9f9;
@@ -45,35 +85,28 @@
     color: black;
 }
 
-input[type="text"] {
-    width: calc(100% - 22px);
-    padding: 10px;
+.input-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
     margin-bottom: 10px;
+}
+
+input[type="text"] {
+    width: 100%;
+    height: 20px;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-.button-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-self: center;
-}
-
-.chat-container button {
-    padding: 10px 20px;
+.send-button {
     border: none;
+    height: 40px;
     border-radius: 5px;
+    justify-self: flex-end;
     background-color: rgb(76, 147, 150);
+    margin-right: unset;
     color: white;
-    cursor: pointer;
-    margin-right: 10px;
-}
-
-.chat-container button:hover {
-    background-color: rgb(76, 147, 150);
-}
-
-.chat-container .clear-button {
-    background-color: rgb(226, 85, 85) !important;
 }

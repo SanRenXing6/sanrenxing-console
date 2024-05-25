@@ -10,6 +10,7 @@ import ChatModal from "../component/ChatModal";
 import { useNavigate } from "react-router-dom";
 
 import { useModal } from "../context/ModalContext";
+import { dealWithResponseError } from "../util/ErrorHelper";
 
 const OverviewPage: React.FC = () => {
     const { t } = useTranslation();
@@ -38,11 +39,7 @@ const OverviewPage: React.FC = () => {
             setSkillData(data);
         }).catch(
             error => {
-                if (error?.message?.includes("403")) {
-                    refreshToken();
-                } else {
-                    console.error(error?.message);
-                }
+                dealWithResponseError(error);
             }
         );
     }, [refreshToken]);
@@ -113,7 +110,7 @@ const OverviewPage: React.FC = () => {
                 <div className="profile-list">
                     {
                         profileData.map((profile: any) => {
-                            return <ProfileCard key={profile.id} data={profile}/>
+                            return <ProfileCard key={profile.id} data={profile} />
                         })
                     }
                 </div>
