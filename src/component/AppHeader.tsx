@@ -27,16 +27,18 @@ export const AppHeader: React.FC = () => {
     React.useEffect(() => {
         if (!userId || userId?.length === 0) {
             navigate("/login")
+        } else {
+            request(
+                "GET",
+                `/messages/${userId}`,
+                {}
+            ).then((response) => {
+                setMessages(response?.data);
+            }).catch((error) => {
+                dealWithResponseError(error);
+            });
         }
-        request(
-            "GET",
-            `/messages/${userId}`,
-            {}
-        ).then((response) => {
-            setMessages(response?.data);
-        }).catch((error) => {
-            dealWithResponseError(error);
-        });
+
     }, [userId])
 
     const logout = () => {

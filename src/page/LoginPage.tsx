@@ -2,7 +2,7 @@ import React from 'react';
 import logo from '../asset/logo.png';
 import '../asset/login.css';
 import { request, setAuthToken } from '../util/AxiosHelper';
-import { checkIfStringEmpty, validateEmail } from '../util/StringHelper';
+import { validateEmail } from '../util/StringHelper';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaEye } from "react-icons/fa";
@@ -35,6 +35,7 @@ const LoginPage: React.FC = () => {
     // TODO: learn how to deal with global values when navigate back and forth
     React.useEffect(() => {
         setAuthToken('');
+        localStorage.clear();
         // eslint-disable-next-line
     }, [])
 
@@ -99,7 +100,7 @@ const LoginPage: React.FC = () => {
 
     const checkFormValues = () => {
         var validated = true;
-        if (checkIfStringEmpty(email)) {
+        if (!email) {
             setEmailError(t('errors.mustInputValue'));
             validated = false;
         } else if (!validateEmail(email)) {
@@ -108,13 +109,13 @@ const LoginPage: React.FC = () => {
         } else {
             setEmailError("");
         }
-        if (checkIfStringEmpty(password)) {
+        if (!password) {
             setPasswordError(t('errors.mustInputValue'));
             validated = false;
         } else {
             setPasswordError("");
         }
-        if (!isLogin && checkIfStringEmpty(name)) {
+        if (!isLogin && !name) {
             setNameError(t('errors.mustInputValue'));
             validated = false;
         } else {

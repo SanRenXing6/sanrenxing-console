@@ -60,6 +60,7 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
                 <img className="profile-img" src={imageUrl || userProfileImg}></img>
                 <WebRTC
                     userId={data?.userId}
+                    userName={userName}
                 />
                 <div className="profile-rate">
                     {getStars(userRate)}
