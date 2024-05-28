@@ -2,7 +2,8 @@ export interface Message {
     id: string,
     fromUserId: string,
     fromUserName: string,
-    toUser: string,
+    toUserId: string,
+    toUserName: string,
     content: string,
     createdAt: string
 }

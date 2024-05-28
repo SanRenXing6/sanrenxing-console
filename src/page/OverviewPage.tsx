@@ -110,7 +110,9 @@ const OverviewPage: React.FC = () => {
                 <div className="profile-list">
                     {
                         profileData.map((profile: any) => {
-                            return <ProfileCard key={profile.id} data={profile} />
+                            if (profile?.userId != userId) {
+                                return <ProfileCard key={profile.id} data={profile} />
+                            }
                         })
                     }
                 </div>

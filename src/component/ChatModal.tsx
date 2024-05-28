@@ -36,10 +36,18 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
     const [inputMessage, setInputMessage] = useState<string>('');
     const [myUserName, setMyUserName] = useState<string>('');
     const myUserId = localStorage.getItem('userId');
-    const { toUserId, toUserName } = useMessage();
+    const { toUserId, toUserName, updateToUserId, updateToUserName } = useMessage();
+    let defaultUserKey = "";
     // selected user format userName:userId
     const [selectedUser, setSelectedUser] = useState<string>();
     const [messageListData, setMessageListData] = useState<any>({});
+
+    if (!!toUserId && !!toUserName) {
+        defaultUserKey = toUserName + ":" + toUserId;
+        if (!(defaultUserKey in messageListData)) {
+            messageListData[defaultUserKey] = []
+        }
+    }
 
     useEffect(() => {
         if (myUserId && myUserId?.length > 0) {
@@ -73,13 +81,15 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
         // Customized deal with message when receive messages
         webSocket.onmessage = (event) => {
             const messageData = event.data?.split(":");
-            const userName = messageData[1];
-            const userId = messageData[2];
-            const content = messageData[3];
+            const userName = messageData[2];
+            const userId = messageData[3];
+            const content = messageData[4];
             const userKey = userName + ":" + userId;
             messageListData?.[userKey]?.push({
                 fromUserId: userId,
-                toUser: myUserId,
+                fromUserName: userName,
+                toUserId: myUserId,
+                toUserName: myUserName,
                 content: `${content}`
             });
         };
@@ -97,20 +107,20 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
 
     const sendMessage = () => {
         if (webSocket && webSocket.readyState === WebSocket.OPEN && inputMessage?.length > 0) {
-            const targetUser = !selectedUser ? toUserId : selectedUser?.split(":")[1];
-            const messageKey = !selectedUser ? toUserName + ":" + toUserId : selectedUser;
+            const targetUser = !selectedUser ? defaultUserKey : selectedUser;
             const payload = `${targetUser}:${myUserName}:${myUserId}:${inputMessage}`;
             webSocket.send(payload);
             const newMessage = {
                 fromUserId: myUserId,
                 fromUserName: myUserName,
-                toUser: toUserId,
+                toUserId: toUserId,
+                toUserName: toUserName,
                 content: `${inputMessage}`
             };
-            if (messageListData[messageKey]) {
-                messageListData[messageKey].push(newMessage);
+            if (messageListData[targetUser]) {
+                messageListData[targetUser].push(newMessage);
             } else {
-                messageListData[messageKey] = [newMessage]
+                messageListData[targetUser] = [newMessage]
             }
             request(
                 "POST",
@@ -125,13 +135,18 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
     };
 
     const clearChat = () => {
-        setMessageListData({});
+        setSelectedUser("");
+        updateToUserId("");
+        updateToUserName("");
     }
 
     return (
         <Modal
             isOpen={isOpen}
-            onRequestClose={onClose}
+            onRequestClose={() => {
+                clearChat();
+                onClose();
+            }}
             contentLabel="Chat"
             style={customStyles}
         >
@@ -140,23 +155,28 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
                 <div className="modal-content">
                     <div className="user-tabs">
                         {
-                            Object.keys(messageListData).map((user) =>
-                            (
-                                <div
-                                    key={user}
-                                    onClick={() => {
-                                        setSelectedUser(user?.split(":")?.[1])
-                                    }}
-                                    className="user-tab"
-                                >
-                                    {user?.split(":")?.[0].trim() || ""}
-                                </div>
-                            ))}
+                            Object.keys(messageListData).map((user) => {
+                                const userName = user?.split(":")?.[0] || "";
+                                const currentSelected = !selectedUser ? defaultUserKey : selectedUser;
+                                const isSelected = currentSelected === user;
+                                return (
+                                    <div
+                                        key={user}
+                                        onClick={() => {
+                                            setSelectedUser(user)
+                                        }}
+                                        className={isSelected ? "user-tab-selected" : "user-tab"}
+                                    >
+                                        {userName}
+                                    </div>
+                                )
+                            }
+                            )}
                     </div>
                     <div className="user-messages">
                         <div className="message-list">
-                            {selectedUser &&
-                                messageListData[selectedUser]?.map(
+                            {(selectedUser || defaultUserKey) &&
+                                messageListData[!selectedUser ? defaultUserKey : selectedUser]?.map(
                                     (message: Message, index: number) => (
                                         message?.content && message?.content?.length > 0 &&
                                         <div key={index}

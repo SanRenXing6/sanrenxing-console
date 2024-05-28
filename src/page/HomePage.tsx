@@ -24,7 +24,7 @@ const HomePage = () => {
             <AppHeader />
             <div className="App-body">
               <Routes>
-                <Route path="/" element={<Navigate replace to="/overview" />} />
+                <Route path="/" element={<Navigate replace to="/login" />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/overview" element={<OverviewPage />} />
                 <Route path="/profile" element={<ProfileFormPage />} />
