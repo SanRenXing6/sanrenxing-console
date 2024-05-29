@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import '../asset/chat.css';
 import { useMessage } from '../context/MessageContext';
@@ -37,18 +37,41 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
     const [myUserName, setMyUserName] = useState<string>('');
     const myUserId = localStorage.getItem('userId');
     const { toUserId, toUserName, updateToUserId, updateToUserName } = useMessage();
-    let defaultUserKey = "";
     // selected user format userName:userId
     const [selectedUser, setSelectedUser] = useState<string>();
     const [messageListData, setMessageListData] = useState<any>({});
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-    if (!!toUserId && !!toUserName) {
-        defaultUserKey = toUserName + ":" + toUserId;
-        if (!(defaultUserKey in messageListData)) {
-            messageListData[defaultUserKey] = []
+    console.log(messageListData)
+
+    // set up web socket config
+    useEffect(() => {
+        configWebSocket(webSocket);
+
+        // Customized deal with message when receive messages
+        webSocket.onmessage = (event) => {
+            const messageData = event.data?.split(":");
+            const userName = messageData[2];
+            const userId = messageData[3];
+            const content = messageData[4];
+            const userKey = userName + ":" + userId;
+            const newMessage = {
+                fromUserId: userId,
+                fromUserName: userName,
+                toUserId: myUserId,
+                toUserName: myUserName,
+                content: `${content}`
+            };
+            updateMessageList(userKey, newMessage);
+
+        };
+
+        return () => {
+            clearChat();
         }
-    }
+    }, [])
 
+    // fetch user message data, depend on userId
     useEffect(() => {
         if (myUserId && myUserId?.length > 0) {
             request(
@@ -74,30 +97,13 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
             }).catch((error) => {
                 dealWithResponseError(error);
             });
-
         }
-        configWebSocket(webSocket);
-
-        // Customized deal with message when receive messages
-        webSocket.onmessage = (event) => {
-            const messageData = event.data?.split(":");
-            const userName = messageData[2];
-            const userId = messageData[3];
-            const content = messageData[4];
-            const userKey = userName + ":" + userId;
-            messageListData?.[userKey]?.push({
-                fromUserId: userId,
-                fromUserName: userName,
-                toUserId: myUserId,
-                toUserName: myUserName,
-                content: `${content}`
-            });
-        };
-
-        return () => {
-            clearChat();
-        }
+        scrollToBottom()
     }, [myUserId]);
+
+    useEffect(() => {
+        scrollToBottom()
+    }, [messageListData])
 
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
@@ -105,23 +111,46 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
         }
     }
 
+    const getCurrentUserKey = () => {
+        if (!!selectedUser) {
+            return selectedUser;
+        }
+        if (!!toUserId && !!toUserName) {
+            const defaultUserKey = toUserName + ":" + toUserId;
+            if (!(defaultUserKey in messageListData)) {
+                messageListData[defaultUserKey] = []
+            }
+            return defaultUserKey;
+        }
+        const keys = Object.keys(messageListData);
+        if (keys?.length > 0) {
+            return keys[0];
+        }
+        return "";
+    }
+
+    const updateMessageList = (userKey: string, newMessage: any) => {
+        const updatedMessageList = { ...messageListData }
+        if (!updatedMessageList[userKey]) {
+            updatedMessageList[userKey] = [];
+        }
+        updatedMessageList[userKey].push(newMessage);
+        setMessageListData(updatedMessageList);
+    }
+
     const sendMessage = () => {
         if (webSocket && webSocket.readyState === WebSocket.OPEN && inputMessage?.length > 0) {
-            const targetUser = !selectedUser ? defaultUserKey : selectedUser;
+            const targetUser = getCurrentUserKey();
             const payload = `${targetUser}:${myUserName}:${myUserId}:${inputMessage}`;
             webSocket.send(payload);
             const newMessage = {
                 fromUserId: myUserId,
                 fromUserName: myUserName,
-                toUserId: toUserId,
-                toUserName: toUserName,
+                toUserId: targetUser?.split(":")[1],
+                toUserName: targetUser?.split(":")[0],
                 content: `${inputMessage}`
             };
-            if (messageListData[targetUser]) {
-                messageListData[targetUser].push(newMessage);
-            } else {
-                messageListData[targetUser] = [newMessage]
-            }
+            updateMessageList(targetUser, newMessage);
             request(
                 "POST",
                 "/messages",
@@ -133,6 +162,10 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
             setInputMessage('');
         }
     };
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
 
     const clearChat = () => {
         setSelectedUser("");
@@ -151,13 +184,13 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
             style={customStyles}
         >
             <div className="chat-container">
-                <h4>Messages</h4>
+                <h4 className='chat-title'>Messages</h4>
                 <div className="modal-content">
                     <div className="user-tabs">
                         {
                             Object.keys(messageListData).map((user) => {
                                 const userName = user?.split(":")?.[0] || "";
-                                const currentSelected = !selectedUser ? defaultUserKey : selectedUser;
+                                const currentSelected = getCurrentUserKey();
                                 const isSelected = currentSelected === user;
                                 return (
                                     <div
@@ -175,8 +208,8 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
                     </div>
                     <div className="user-messages">
                         <div className="message-list">
-                            {(selectedUser || defaultUserKey) &&
-                                messageListData[!selectedUser ? defaultUserKey : selectedUser]?.map(
+                            {!!getCurrentUserKey() &&
+                                messageListData[getCurrentUserKey()]?.map(
                                     (message: Message, index: number) => (
                                         message?.content && message?.content?.length > 0 &&
                                         <div key={index}
@@ -185,6 +218,7 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
                                             {message.content}
                                         </div>
                                     ))}
+                            <div ref={messagesEndRef} />
                         </div>
                         <div className="input-container">
                             <input
