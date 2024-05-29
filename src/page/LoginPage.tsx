@@ -58,12 +58,13 @@ const LoginPage: React.FC = () => {
                     setAuthToken(data?.token);
                     const imageUrl = await retriveImage(data?.imageId);
                     localStorage.setItem('userId', data?.userId);
+                    localStorage.setItem('userName', data?.userName);
                     localStorage.setItem('imageUrl', imageUrl);
                     setIsLoading(false);
                     if (data?.profileId && data?.profileId.length > 0) {
                         navigate('/overview');
                     } else {
-                        navigate('/profile', { state: { userId: data?.userId, email: email } });
+                        navigate('/profile', { state: { userId: data?.userId, userName: data?.userName, email: email } });
                     }
                 }).catch((error) => {
                     setIsLoading(false);

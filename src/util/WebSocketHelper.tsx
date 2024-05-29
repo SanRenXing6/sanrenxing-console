@@ -1,5 +1,5 @@
 export const getWebSocket = (userId: string) => {
-    const wsInstance = WebSocketSingleton.getInstance('ws://localhost:8080/api/v1/chat?userId=' + userId);
+    const wsInstance = WebSocketSingleton.getInstance('ws://1.12.223.110:8080/api/v1/chat?userId=' + userId);
     const socket = wsInstance.getSocket();
     return socket;
 }

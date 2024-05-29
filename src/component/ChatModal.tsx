@@ -34,8 +34,8 @@ const customStyles = {
 
 const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
     const [inputMessage, setInputMessage] = useState<string>('');
-    const [myUserName, setMyUserName] = useState<string>('');
     const myUserId = localStorage.getItem('userId');
+    const myUserName = localStorage.getItem('userName');
     const { toUserId, toUserName, updateToUserId, updateToUserName } = useMessage();
     // selected user format userName:userId
     const [selectedUser, setSelectedUser] = useState<string>();
@@ -74,16 +74,6 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
     // fetch user message data, depend on userId
     useEffect(() => {
         if (myUserId && myUserId?.length > 0) {
-            request(
-                "GET",
-                `/users/${myUserId}`,
-                {}
-            ).then((response) => {
-                setMyUserName(response?.data?.name || "user")
-            }).catch(error => {
-                dealWithResponseError(error);
-            });
-
             request(
                 "GET",
                 `/messages/${myUserId}`,

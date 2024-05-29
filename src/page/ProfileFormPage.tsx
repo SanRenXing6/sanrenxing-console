@@ -26,6 +26,7 @@ const ProfileFormPage: React.FC = () => {
 
     const location = useLocation();
     const userId = location.state.userId;
+    const userName = location.state.userName;
 
     React.useEffect(() => {
         // initilize skills set
@@ -99,6 +100,7 @@ const ProfileFormPage: React.FC = () => {
             "/profiles",
             {
                 userId: userId,
+                userName: userName,
                 imageId: imageId,
                 description: description,
                 needs: needs,

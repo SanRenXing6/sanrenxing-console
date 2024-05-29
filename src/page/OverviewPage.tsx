@@ -50,11 +50,11 @@ const OverviewPage: React.FC = () => {
         }
     }
 
-    const refetchProfiles = (skill: string) => {
+    const refetchProfiles = (text: string) => {
         setShowProfiles(true);
         request(
             "GET",
-            `/search/${skill}`,
+            `/search/${text}`,
             {}
         ).then((response) => {
             setProfileData(response?.data);

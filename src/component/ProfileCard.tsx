@@ -2,13 +2,11 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 import "../asset/profile.css";
 import userProfileImg from "../asset/profile.png";
-import { request } from "../util/AxiosHelper";
 import { retriveImage } from "../util/ImageHelper";
 import { FaStar } from "react-icons/fa";
 import { getRandomInt } from "../util/NumberHelper";
 import WebRTC from "./WebRTC";
 import { refreshToken } from "../util/AuthHelper";
-import { dealWithResponseError } from "../util/ErrorHelper";
 
 interface Props {
     data: any
@@ -16,7 +14,6 @@ interface Props {
 
 const ProfileCard: React.FC<Props> = ({ data }) => {
     const { t } = useTranslation();
-    const [userName, setUserName] = React.useState("");
     const [userRate, setUserRate] = React.useState(1);
     const [imageUrl, setImageUrl] = React.useState<string>();
 
@@ -29,16 +26,6 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
     }
 
     React.useEffect(() => {
-        request(
-            "GET",
-            `/users/${data?.userId}`,
-            {}
-        ).then((response) => {
-            setUserName(response?.data?.name || "user")
-        }).catch(error => {
-            dealWithResponseError(error);
-        });
-
         const fetchImageData = async () => {
             try {
                 const image = await retriveImage(data?.imageId);
@@ -60,14 +47,14 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
                 <img className="profile-img" src={imageUrl || userProfileImg}></img>
                 <WebRTC
                     userId={data?.userId}
-                    userName={userName}
+                    userName={data?.userName}
                 />
                 <div className="profile-rate">
                     {getStars(userRate)}
                 </div>
             </div>
             <div className="profile-right">
-                <div className="profile-name">{userName}</div>
+                <div className="profile-name">{data?.userName}</div>
                 <div className="profile-description">{data?.description}</div>
                 <div className="profile-card-label">{t('labels.needs')}</div>
                 <div className="profile-needs">{data?.needs}</div>
