@@ -56,10 +56,13 @@ const LoginPage: React.FC = () => {
                 .then(async (response) => {
                     const data = response?.data;
                     setAuthToken(data?.token);
-                    const imageUrl = await retriveImage(data?.imageId);
+                    if (data?.imageId) {
+                        const imageUrl = await retriveImage(data?.imageId);
+                        localStorage.setItem('imageUrl', imageUrl);
+                    }
                     localStorage.setItem('userId', data?.userId);
                     localStorage.setItem('userName', data?.userName);
-                    localStorage.setItem('imageUrl', imageUrl);
+
                     setIsLoading(false);
                     if (data?.profileId && data?.profileId.length > 0) {
                         navigate('/overview');

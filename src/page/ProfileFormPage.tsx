@@ -107,8 +107,10 @@ const ProfileFormPage: React.FC = () => {
                 skills: skills
             }
         ).then(async () => {
-            const imageUrl = await retriveImage(imageId);
-            localStorage.setItem('imageUrl', imageUrl);
+            if (hasImage) {
+                const imageUrl = await retriveImage(imageId);
+                localStorage.setItem('imageUrl', imageUrl);
+            }
         }).catch(error => {
             console.error(error);
         })

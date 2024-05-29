@@ -42,8 +42,6 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
     const [messageListData, setMessageListData] = useState<any>({});
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-    console.log(messageListData)
-
     // set up web socket config
     useEffect(() => {
         configWebSocket(webSocket);
@@ -80,9 +78,9 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
                 {}
             ).then((response) => {
                 setMessageListData(response?.data)
-                const firstUser = Object.keys(response?.data)[0];
-                if (firstUser && firstUser?.length > 0) {
-                    setSelectedUser(firstUser);
+                const defaultUser = getCurrentUserKey();
+                if (defaultUser && defaultUser?.length > 0) {
+                    setSelectedUser(defaultUser);
                 }
             }).catch((error) => {
                 dealWithResponseError(error);
@@ -119,12 +117,14 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
         return "";
     }
 
-    const updateMessageList = (userKey: string, newMessage: any) => {
+    const updateMessageList = (userKey: string, newMessage?: any) => {
         const updatedMessageList = { ...messageListData }
         if (!updatedMessageList[userKey]) {
             updatedMessageList[userKey] = [];
         }
-        updatedMessageList[userKey].push(newMessage);
+        if (newMessage) {
+            updatedMessageList[userKey].push(newMessage);
+        }
         setMessageListData(updatedMessageList);
     }
 
@@ -186,7 +186,8 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
                                     <div
                                         key={user}
                                         onClick={() => {
-                                            setSelectedUser(user)
+                                            updateMessageList(currentSelected); // add key if it is new key
+                                            setSelectedUser(user);
                                         }}
                                         className={isSelected ? "user-tab-selected" : "user-tab"}
                                     >
