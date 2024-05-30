@@ -5,7 +5,7 @@ import { useMessage } from '../context/MessageContext';
 import { Message } from '../model/Message';
 import { request } from '../util/AxiosHelper';
 import { dealWithResponseError } from '../util/ErrorHelper';
-import { configWebSocket } from '../util/WebSocketHelper';
+import { configTextWebSocket } from '../util/WebSocketHelper';
 
 Modal.setAppElement('#root');
 
@@ -44,7 +44,7 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
 
     // set up web socket config
     useEffect(() => {
-        configWebSocket(webSocket);
+        configTextWebSocket(webSocket);
 
         // Customized deal with message when receive messages
         webSocket.onmessage = (event) => {
@@ -61,7 +61,6 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
                 content: `${content}`
             };
             updateMessageList(userKey, newMessage);
-
         };
 
         return () => {

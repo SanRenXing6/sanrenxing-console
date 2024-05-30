@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import "../asset/overview.css"
 import { useTranslation } from 'react-i18next';
 import ProfileCard from "../component/ProfileCard";
-import { getWebSocket } from "../util/WebSocketHelper";
+import { getTextWebSocket } from "../util/WebSocketHelper";
 import { refreshToken } from "../util/AuthHelper";
 import ChatModal from "../component/ChatModal";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,7 @@ const OverviewPage: React.FC = () => {
     const resultsRef = React.useRef<HTMLDivElement>(null);
     const [showProfiles, setShowProfiles] = React.useState(false);
     const userId = localStorage.getItem('userId') || '';
-    const webSocket = getWebSocket(userId);
+    const webSocket = getTextWebSocket(userId);
     const navigate = useNavigate();
     const { isModalOpen, closeModal } = useModal();
 

@@ -18,18 +18,10 @@ const WebRTC: React.FC<Props> = ({ userId, userName }) => {
 
     const callUser = () => {
         setCalling(true);
-        fetch('/api/v1/call/start')
-            .then(response => response.text())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
     };
 
     const stopCall = () => {
         setCalling(false);
-        fetch('/api/v1/call/stop')
-            .then(response => response.text())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
     };
 
     return (
@@ -39,7 +31,7 @@ const WebRTC: React.FC<Props> = ({ userId, userName }) => {
                 onClick={() => {
                     updateToUserId(userId);
                     updateToUserName(userName);
-                    openModal();
+                    openModal(); // open message chat modal
                 }}
             >
                 <IoChatboxEllipsesOutline className="text-icon" />
