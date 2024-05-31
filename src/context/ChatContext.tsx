@@ -1,26 +1,26 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
-interface MessageContextType {
+interface ChatContextType {
     toUserId: string;
     toUserName: string;
     updateToUserId: (toUserId: string) => void;
     updateToUserName: (toUserName: string) => void;
 }
 
-const MessagContext = createContext<MessageContextType>({
+const ChatContext = createContext<ChatContextType>({
     toUserId: "",
     toUserName: "",
     updateToUserId: (userId: string) => { },
     updateToUserName: (userName: string) => { }
 });
 
-interface MessageProviderProps {
+interface ChatProviderProps {
     children: ReactNode;
 }
 
-export const useMessage = () => useContext(MessagContext);
+export const useChat = () => useContext(ChatContext);
 
-export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) => {
+export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     const [toUserId, setToUserId] = useState<string>("");
     const [toUserName, setToUserName] = useState<string>("");
 
@@ -33,8 +33,8 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({ children }) =>
     }
 
     return (
-        <MessagContext.Provider value={{ toUserId, toUserName, updateToUserId, updateToUserName }}>
+        <ChatContext.Provider value={{ toUserId, toUserName, updateToUserId, updateToUserName }}>
             {children}
-        </MessagContext.Provider>
+        </ChatContext.Provider>
     );
 };

@@ -7,7 +7,7 @@ import OverviewPage from './OverviewPage';
 import i18n from '../asset/i18n';
 import ProfileFormPage from './ProfileFormPage';
 import { ModalProvider } from '../context/ModalContext';
-import { MessageProvider } from '../context/MessageContext';
+import { ChatProvider } from '../context/ChatContext';
 
 const HomePage = () => {
 
@@ -20,7 +20,7 @@ const HomePage = () => {
     <div className="App">
       <BrowserRouter>
         <ModalProvider>
-          <MessageProvider>
+          <ChatProvider>
             <AppHeader />
             <div className="App-body">
               <Routes>
@@ -30,7 +30,7 @@ const HomePage = () => {
                 <Route path="/profile" element={<ProfileFormPage />} />
               </Routes>
             </div>
-          </MessageProvider>
+          </ChatProvider>
         </ModalProvider>
       </BrowserRouter>
     </div>

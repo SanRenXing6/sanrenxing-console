@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import '../asset/chat.css';
-import { useMessage } from '../context/MessageContext';
+import { useChat } from '../context/ChatContext';
 import { Message } from '../model/Message';
 import { request } from '../util/AxiosHelper';
 import { dealWithResponseError } from '../util/ErrorHelper';
@@ -33,11 +33,11 @@ const customStyles = {
     },
 };
 
-const TextChatModal: React.FC<Props> = ({ webSocket, onClose }) => {
+const TextModal: React.FC<Props> = ({ webSocket, onClose }) => {
     const [inputMessage, setInputMessage] = useState<string>('');
     const myUserId = localStorage.getItem('userId') || "";
     const myUserName = localStorage.getItem('userName') || "";
-    const { toUserId, toUserName, updateToUserId, updateToUserName } = useMessage();
+    const { toUserId, toUserName, updateToUserId, updateToUserName } = useChat();
     // selected user format userName:userId
     const [selectedUser, setSelectedUser] = useState<string>();
     const [messageListData, setMessageListData] = useState<MessageListType>({});
@@ -241,4 +241,4 @@ const TextChatModal: React.FC<Props> = ({ webSocket, onClose }) => {
     );
 };
 
-export default TextChatModal;
+export default TextModal;

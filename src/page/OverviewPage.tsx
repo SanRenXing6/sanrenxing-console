@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import ProfileCard from "../component/ProfileCard";
 import { getTextWebSocket } from "../util/WebSocketHelper";
 import { refreshToken } from "../util/AuthHelper";
-import TextChatModal from "../component/TextChatModal";
+import TextModal from "../component/TextModal";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../context/ModalContext";
 import { dealWithResponseError } from "../util/ErrorHelper";
@@ -119,7 +119,7 @@ const OverviewPage: React.FC = () => {
             }
             {
                 isTextModalOpen &&
-                <TextChatModal
+                <TextModal
                     onClose={closeTextModal}
                     webSocket={textWebSocket}
                 />

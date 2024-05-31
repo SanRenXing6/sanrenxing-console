@@ -3,7 +3,7 @@ import { IoIosCall } from "react-icons/io";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import "../asset/profile.css";
 import { useModal } from '../context/ModalContext';
-import { useMessage } from '../context/MessageContext';
+import { useChat } from '../context/ChatContext';
 import { configCallWebSocket, getCallWebSocket } from '../util/WebSocketHelper';
 import CallModal from './CallModal';
 import { useNavigate } from 'react-router-dom';
@@ -16,10 +16,11 @@ interface Props {
 
 const WebRTC: React.FC<Props> = ({ userId, userName, userImageSrc }) => {
     const { openTextModal, openCallModal, closeCallModal, isCallModalOpen } = useModal();
-    const { updateToUserId, updateToUserName } = useMessage();
+    const { updateToUserId, updateToUserName } = useChat();
     const myUserId = localStorage.getItem('userId');
     const navigate = useNavigate();
     const [callWebSocket, setCallWebSocket] = React.useState<WebSocket>();
+    const [isSelected, setIsSelected] = React.useState<boolean>();
 
     const callUser = () => {
         if (!myUserId || myUserId?.length === 0) {
@@ -28,6 +29,7 @@ const WebRTC: React.FC<Props> = ({ userId, userName, userImageSrc }) => {
             const webSocket = getCallWebSocket(myUserId);
             setCallWebSocket(webSocket);
             configCallWebSocket(webSocket);
+            setIsSelected(true);
             openCallModal();
         }
 
@@ -58,7 +60,7 @@ const WebRTC: React.FC<Props> = ({ userId, userName, userImageSrc }) => {
                 <IoIosCall className="call-icon" />
             </button>
             {
-                isCallModalOpen &&
+                isCallModalOpen && isSelected &&
                 <CallModal
                     userName={userName}
                     userImageSrc={userImageSrc}
