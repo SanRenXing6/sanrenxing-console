@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { IoClose } from "react-icons/io5";
 import Modal from 'react-modal';
 import '../asset/chat.css';
 import { useChat } from '../context/ChatContext';
@@ -177,17 +178,22 @@ const TextModal: React.FC<Props> = ({ webSocket, onClose }) => {
         updateToUserName("");
     }
 
+    const closeChat = () => {
+        clearChat();
+        onClose();
+    }
+
     return (
         <Modal
             isOpen={true}
-            onRequestClose={() => {
-                clearChat();
-                onClose();
-            }}
+            onRequestClose={closeChat}
             contentLabel="Chat"
             style={customStyles}
         >
             <div className="chat-container">
+                <button type="button" className="close-button" onClick={closeChat}>
+                    <IoClose className="close-icon" />
+                </button>
                 <h4 className='chat-title'>Messages</h4>
                 <div className="modal-content">
                     <div className="user-tabs">

@@ -14,12 +14,35 @@
 }
 
 .chat-title {
-    position: relative;
+    display: flex;
+    margin: 0px;
+    margin-bottom: 25px;
 }
 
 .close-button {
     display: flex;
+    width: auto;
+    height: auto;
     justify-self: flex-end;
+    align-self: flex-end;
+    border: none !important;
+    background-color: transparent;
+    padding-top: 10px;
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-bottom: 0px;
+}
+
+.close-icon {
+    color: gray;
+    width: 20px;
+    height: 20px;
+}
+
+.close-icon:hover {
+    color: gray;
+    width: 22px;
+    height: 22px;
 }
 
 .modal-content {
