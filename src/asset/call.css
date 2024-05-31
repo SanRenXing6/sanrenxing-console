@@ -1,0 +1,39 @@
+.call-container {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-self: center;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 80%;
+    padding-top: 90px;
+}
+
+.profile-img {
+    display: flex;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.calling-text {
+    display: flex;
+    margin-top: 20px;
+}
+
+.hang-up-button {
+    display: flex;
+    justify-self: flex-end;
+    justify-content: center;
+    border-radius: 10px;
+    border: none !important;
+    margin-top: 70px;
+    background-color: rgb(226, 85, 85);
+}
+
+.hang-up-icon {
+    display: flex;
+    color: white;
+    height: 18px;
+    width: 20px;
+}

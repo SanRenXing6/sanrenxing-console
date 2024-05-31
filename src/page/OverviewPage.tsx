@@ -6,9 +6,8 @@ import { useTranslation } from 'react-i18next';
 import ProfileCard from "../component/ProfileCard";
 import { getTextWebSocket } from "../util/WebSocketHelper";
 import { refreshToken } from "../util/AuthHelper";
-import ChatModal from "../component/ChatModal";
+import TextChatModal from "../component/TextChatModal";
 import { useNavigate } from "react-router-dom";
-
 import { useModal } from "../context/ModalContext";
 import { dealWithResponseError } from "../util/ErrorHelper";
 
@@ -21,9 +20,9 @@ const OverviewPage: React.FC = () => {
     const resultsRef = React.useRef<HTMLDivElement>(null);
     const [showProfiles, setShowProfiles] = React.useState(false);
     const userId = localStorage.getItem('userId') || '';
-    const webSocket = getTextWebSocket(userId);
+    const textWebSocket = getTextWebSocket(userId);
     const navigate = useNavigate();
-    const { isModalOpen, closeModal } = useModal();
+    const { isTextModalOpen, closeTextModal } = useModal();
 
     React.useEffect(() => {
         if (!userId || userId?.length === 0) {
@@ -110,7 +109,7 @@ const OverviewPage: React.FC = () => {
                 <div className="profile-list">
                     {
                         profileData.map((profile: any) => {
-                            if (profile?.userId != userId) {
+                            if (profile?.userId !== userId) {
                                 return <ProfileCard key={profile.id} data={profile} />
                             }
                         })
@@ -118,11 +117,13 @@ const OverviewPage: React.FC = () => {
                 </div>
             </div>
             }
-            <ChatModal
-                isOpen={isModalOpen}
-                onClose={closeModal}
-                webSocket={webSocket}
-            />
+            {
+                isTextModalOpen &&
+                <TextChatModal
+                    onClose={closeTextModal}
+                    webSocket={textWebSocket}
+                />
+            }
         </div>
     );
 }

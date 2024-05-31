@@ -18,6 +18,7 @@
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "classnames": "^2.5.1",
+    "cross-env": "^7.0.3",
     "i18next": "^23.11.4",
     "i18next-browser-languagedetector": "^8.0.0",
     "lint": "^0.8.19",
@@ -34,7 +35,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server.js",
+    "start:dev": "cross-env NODE_ENV=development react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

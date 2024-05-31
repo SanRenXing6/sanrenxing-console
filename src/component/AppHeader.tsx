@@ -19,7 +19,7 @@ export const AppHeader: React.FC = () => {
     const hasUser = userId && userId?.length > 0;
     const image = hasImage ? imageUrl : defaultUserIcon;
     const navigate = useNavigate();
-    const { openModal } = useModal();
+    const { openTextModal: openModal } = useModal();
     const location = useLocation();
     const isOverviewPage = location.pathname === "/overview";
     const [messages, setMessages] = React.useState<any[]>([]);

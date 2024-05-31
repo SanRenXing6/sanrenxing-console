@@ -1,13 +1,13 @@
+import { backendEndpoint } from "./EndpointHelper";
+
 export const getTextWebSocket = (userId: string) => {
-    const wsInstance = TextWebSocketSingleton.getInstance('ws://1.12.223.110:8080/api/v1/text?userId=' + userId);
+    const wsInstance = TextWebSocketSingleton.getInstance(`ws://${backendEndpoint}:8080/api/v1/text?userId=` + userId);
     const socket = wsInstance.getSocket();
     return socket;
 }
 
 export const getCallWebSocket = (userId: string) => {
-    const wsInstance = CallWebSocketSingleton.getInstance('ws://1.12.223.110:8080/api/v1/call?userId=' + userId);
-    const socket = wsInstance.getSocket();
-    return socket;
+    return new WebSocket(`ws://${backendEndpoint}:8080/api/v1/call?userId=` + userId);
 }
 
 export const getPeerConnection = () => {
@@ -57,26 +57,6 @@ class TextWebSocketSingleton {
             TextWebSocketSingleton.instance = new TextWebSocketSingleton(url);
         }
         return TextWebSocketSingleton.instance;
-    }
-
-    getSocket(): WebSocket {
-        return this.socket;
-    }
-}
-
-class CallWebSocketSingleton {
-    private static instance: CallWebSocketSingleton;
-    private socket: WebSocket;
-
-    private constructor(url: string) {
-        this.socket = new WebSocket(url);
-    }
-
-    public static getInstance(url: string): CallWebSocketSingleton {
-        if (!CallWebSocketSingleton.instance) {
-            CallWebSocketSingleton.instance = new CallWebSocketSingleton(url);
-        }
-        return CallWebSocketSingleton.instance;
     }
 
     getSocket(): WebSocket {

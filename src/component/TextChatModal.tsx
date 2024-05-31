@@ -10,7 +10,6 @@ import { configTextWebSocket } from '../util/WebSocketHelper';
 Modal.setAppElement('#root');
 
 interface Props {
-    isOpen: boolean
     webSocket: WebSocket
     onClose: () => void
 }
@@ -28,11 +27,11 @@ const customStyles = {
         padding: '10px',
     },
     overlay: {
-        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
     },
 };
 
-const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
+const TextChatModal: React.FC<Props> = ({ webSocket, onClose }) => {
     const [inputMessage, setInputMessage] = useState<string>('');
     const myUserId = localStorage.getItem('userId');
     const myUserName = localStorage.getItem('userName');
@@ -164,7 +163,7 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
 
     return (
         <Modal
-            isOpen={isOpen}
+            isOpen={true}
             onRequestClose={() => {
                 clearChat();
                 onClose();
@@ -229,4 +228,4 @@ const ChatModal: React.FC<Props> = ({ isOpen, webSocket, onClose }) => {
     );
 };
 
-export default ChatModal;
+export default TextChatModal;

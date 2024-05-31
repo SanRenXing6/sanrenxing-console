@@ -1,27 +1,43 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { IoIosCall } from "react-icons/io";
-import { MdCallEnd } from "react-icons/md";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import "../asset/profile.css";
 import { useModal } from '../context/ModalContext';
 import { useMessage } from '../context/MessageContext';
+import { configCallWebSocket, getCallWebSocket } from '../util/WebSocketHelper';
+import CallModal from './CallModal';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
     userId: string,
-    userName: string
+    userName: string,
+    userImageSrc: any,
 }
 
-const WebRTC: React.FC<Props> = ({ userId, userName }) => {
-    const [calling, setCalling] = useState(false);
-    const { openModal } = useModal();
+const WebRTC: React.FC<Props> = ({ userId, userName, userImageSrc }) => {
+    const { openTextModal, openCallModal, closeCallModal, isCallModalOpen } = useModal();
     const { updateToUserId, updateToUserName } = useMessage();
+    const myUserId = localStorage.getItem('userId');
+    const navigate = useNavigate();
+    const [callWebSocket, setCallWebSocket] = React.useState<WebSocket>();
 
     const callUser = () => {
-        setCalling(true);
+        if (!myUserId || myUserId?.length === 0) {
+            navigate("/login")
+        } else {
+            const webSocket = getCallWebSocket(myUserId);
+            setCallWebSocket(webSocket);
+            configCallWebSocket(webSocket);
+            openCallModal();
+        }
+
     };
 
     const stopCall = () => {
-        setCalling(false);
+        if (callWebSocket) {
+            callWebSocket.close();
+        }
+        closeCallModal();
     };
 
     return (
@@ -31,19 +47,24 @@ const WebRTC: React.FC<Props> = ({ userId, userName }) => {
                 onClick={() => {
                     updateToUserId(userId);
                     updateToUserName(userName);
-                    openModal(); // open message chat modal
+                    openTextModal(); // open message chat modal
                 }}
             >
                 <IoChatboxEllipsesOutline className="text-icon" />
             </button>
             <button
                 className="call-button"
-                onClick={calling ? stopCall : callUser}>
-                {
-                    calling ? <MdCallEnd className="call-icon" />
-                        : <IoIosCall className="call-icon" />
-                }
+                onClick={callUser}>
+                <IoIosCall className="call-icon" />
             </button>
+            {
+                isCallModalOpen &&
+                <CallModal
+                    userName={userName}
+                    userImageSrc={userImageSrc}
+                    onClose={stopCall}
+                />
+            }
         </div>
     );
 };
