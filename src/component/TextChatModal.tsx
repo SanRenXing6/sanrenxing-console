@@ -14,6 +14,8 @@ interface Props {
     onClose: () => void
 }
 
+type MessageListType = { [key: string]: Message[] };
+
 const customStyles = {
     content: {
         top: '50%',
@@ -33,12 +35,12 @@ const customStyles = {
 
 const TextChatModal: React.FC<Props> = ({ webSocket, onClose }) => {
     const [inputMessage, setInputMessage] = useState<string>('');
-    const myUserId = localStorage.getItem('userId');
-    const myUserName = localStorage.getItem('userName');
+    const myUserId = localStorage.getItem('userId') || "";
+    const myUserName = localStorage.getItem('userName') || "";
     const { toUserId, toUserName, updateToUserId, updateToUserName } = useMessage();
     // selected user format userName:userId
     const [selectedUser, setSelectedUser] = useState<string>();
-    const [messageListData, setMessageListData] = useState<any>({});
+    const [messageListData, setMessageListData] = useState<MessageListType>({});
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     // set up web socket config
@@ -75,7 +77,7 @@ const TextChatModal: React.FC<Props> = ({ webSocket, onClose }) => {
                 `/messages/${myUserId}`,
                 {}
             ).then((response) => {
-                setMessageListData(response?.data)
+                bulkUpdateMessageList(response?.data);
                 const defaultUser = getCurrentUserKey();
                 if (defaultUser && defaultUser?.length > 0) {
                     setSelectedUser(defaultUser);
@@ -86,6 +88,12 @@ const TextChatModal: React.FC<Props> = ({ webSocket, onClose }) => {
         }
         scrollToBottom()
     }, [myUserId]);
+
+    useEffect(() => {
+        if (!!toUserName && !!toUserId) {
+            updateMessageList(toUserName + ":" + toUserId); // add key if it is new key
+        }
+    }, [toUserName, toUserId])
 
     useEffect(() => {
         scrollToBottom()
@@ -115,14 +123,22 @@ const TextChatModal: React.FC<Props> = ({ webSocket, onClose }) => {
         return "";
     }
 
-    const updateMessageList = (userKey: string, newMessage?: any) => {
-        const updatedMessageList = { ...messageListData }
+    const updateMessageList = (userKey: string, newMessage?: Message) => {
+        const updatedMessageList: MessageListType = { ...messageListData }
         if (!updatedMessageList[userKey]) {
             updatedMessageList[userKey] = [];
         }
         if (newMessage) {
             updatedMessageList[userKey].push(newMessage);
         }
+        setMessageListData(updatedMessageList);
+    }
+
+    const bulkUpdateMessageList = (newMessages: MessageListType) => {
+        const updatedMessageList: MessageListType = { ...messageListData }
+        Object.keys(newMessages).forEach(key => {
+            updatedMessageList[key] = newMessages[key];
+        })
         setMessageListData(updatedMessageList);
     }
 
@@ -183,10 +199,7 @@ const TextChatModal: React.FC<Props> = ({ webSocket, onClose }) => {
                                 return (
                                     <div
                                         key={user}
-                                        onClick={() => {
-                                            updateMessageList(currentSelected); // add key if it is new key
-                                            setSelectedUser(user);
-                                        }}
+                                        onClick={() => { setSelectedUser(user); }}
                                         className={isSelected ? "user-tab-selected" : "user-tab"}
                                     >
                                         {userName}
