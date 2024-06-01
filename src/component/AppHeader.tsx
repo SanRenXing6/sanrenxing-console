@@ -19,7 +19,7 @@ export const AppHeader: React.FC = () => {
     const hasUser = userId && userId?.length > 0;
     const image = hasImage ? imageUrl : defaultUserIcon;
     const navigate = useNavigate();
-    const { openTextModal: openModal } = useModal();
+    const { openTextModal } = useModal();
     const location = useLocation();
     const isOverviewPage = location.pathname === "/overview";
     const [messages, setMessages] = React.useState<any[]>([]);
@@ -56,7 +56,7 @@ export const AppHeader: React.FC = () => {
             <div className="headerRight">
                 <LanguageSelect />
                 {isOverviewPage && messages && Object.keys(messages)?.length > 0 &&
-                    <button type="button" className="icon-button" onClick={openModal}>
+                    <button type="button" className="icon-button" onClick={openTextModal}>
                         <IoMailUnreadOutline className="icon" />
                     </button>
                 }

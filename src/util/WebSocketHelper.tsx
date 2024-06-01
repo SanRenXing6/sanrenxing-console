@@ -1,19 +1,16 @@
 import { backendEndpoint } from "./EndpointHelper";
 
 export const getTextWebSocket = (userId: string) => {
+    // use same text web socket since we send messages frequently once start chatting
     const wsInstance = TextWebSocketSingleton.getInstance(`ws://${backendEndpoint}:8080/api/v1/text?userId=` + userId);
     const socket = wsInstance.getSocket();
     return socket;
 }
 
 export const getCallWebSocket = (userId: string) => {
-    return new WebSocket(`ws://${backendEndpoint}:8080/api/v1/call?userId=` + userId);
-}
-
-export const getPeerConnection = () => {
-    const connectInstance = PeerConnectionSingleton.getInstance();
-    const peerConnection = connectInstance.getPeerConnection();
-    return peerConnection;
+    const wsInstance = CallWebSocketSingleton.getInstance(`ws://${backendEndpoint}:8080/api/v1/call?userId=` + userId);
+    const socket = wsInstance.getSocket();
+    return socket;
 }
 
 export const configTextWebSocket = (webSocket: WebSocket) => {
@@ -30,9 +27,19 @@ export const configTextWebSocket = (webSocket: WebSocket) => {
     };
 }
 
-export const configCallWebSocket = (webSocket: WebSocket) => {
-    webSocket.onopen = () => {
+export const configCallWebSocket = (
+    webSocket: WebSocket,
+    peerConnection: RTCPeerConnection,
+    isCallModalOpen: boolean,
+    openCallModal: () => void
+) => {
+    webSocket.onopen = async () => {
         console.log('Call WebSocket connection established');
+        peerConnection.onicecandidate = event => {
+            if (event.candidate) {
+                webSocket.send(JSON.stringify({ type: 'candidate', candidate: event.candidate }));
+            }
+        };
     };
 
     webSocket.onclose = () => {
@@ -42,6 +49,78 @@ export const configCallWebSocket = (webSocket: WebSocket) => {
     webSocket.onerror = (error) => {
         console.error('Call WebSocket error: ', error);
     };
+
+    initialCall(webSocket, peerConnection, isCallModalOpen, openCallModal);
+}
+
+export const initialCall = (webSocket: any, peerConnection: any, isCallModalOpen: boolean, openCallModal: any) => {
+    webSocket.onmessage = async (event: any) => {
+        const message = JSON.parse(event.data);
+        switch (message.type) {
+            case 'offer':
+                if (!isCallModalOpen) {
+                    openCallModal();
+                }
+                await handleOffer(message.offer, message.toUserId, peerConnection, webSocket);
+                break;
+            default:
+                break;
+        }
+    };
+}
+
+export const listenOnCall = (webSocket: any, peerConnection: any) => {
+    webSocket.onmessage = async (event: any) => {
+        const message = JSON.parse(event.data);
+        switch (message.type) {
+            case 'offer':
+                await handleOffer(message.offer, message.toUserId, peerConnection, webSocket);
+                break;
+            case 'answer':
+                await handleAnswer(message.answer, peerConnection);
+                break;
+            case 'candidate':
+                handleCandidate(message.candidate, peerConnection);
+                break;
+            case 'hangup':
+                handleHangUp(webSocket);
+                break;
+            default:
+                break;
+        }
+    };
+}
+
+export const getPeerConnection = () => {
+    return PeerConnectionSingleton.getInstance().getConnection();
+}
+
+export const handleOffer = async (offer: any, toUserId: string,
+    peerConnection: any, callWebSocket: any) => {
+    if (!peerConnection) return;
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+    if (callWebSocket) {
+        callWebSocket.send(JSON.stringify({ type: 'answer', answer, toUserId }));
+    }
+};
+
+export const handleAnswer = async (answer: any, peerConnection: any) => {
+    if (!peerConnection) return;
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+};
+
+export const handleCandidate = (candidate: any, peerConnection: any) => {
+    if (!peerConnection) return;
+    // find the best candidate to set up peer to peer connection
+    peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+};
+
+export const handleHangUp = (callWebSocket: any) => {
+    if (callWebSocket) {
+        callWebSocket.send(JSON.stringify({ type: 'hangup' }));
+    }
 }
 
 class TextWebSocketSingleton {
@@ -64,12 +143,32 @@ class TextWebSocketSingleton {
     }
 }
 
+class CallWebSocketSingleton {
+    private static instance: CallWebSocketSingleton;
+    private socket: WebSocket;
+
+    private constructor(url: string) {
+        this.socket = new WebSocket(url);
+    }
+
+    public static getInstance(url: string): CallWebSocketSingleton {
+        if (!CallWebSocketSingleton.instance) {
+            CallWebSocketSingleton.instance = new CallWebSocketSingleton(url);
+        }
+        return CallWebSocketSingleton.instance;
+    }
+
+    getSocket(): WebSocket {
+        return this.socket;
+    }
+}
+
 class PeerConnectionSingleton {
     private static instance: PeerConnectionSingleton;
-    private peerConnection: RTCPeerConnection;
+    private connection: RTCPeerConnection;
 
     private constructor() {
-        this.peerConnection = new RTCPeerConnection({
+        this.connection = new RTCPeerConnection({
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' },
                 { urls: 'stun:stun1.l.google.com:19302' },
@@ -91,12 +190,12 @@ class PeerConnectionSingleton {
 
     public static getInstance(): PeerConnectionSingleton {
         if (!PeerConnectionSingleton.instance) {
-            PeerConnectionSingleton.instance = new PeerConnectionSingleton();
+            PeerConnectionSingleton.instance = new PeerConnectionSingleton;
         }
         return PeerConnectionSingleton.instance;
     }
 
-    getPeerConnection(): RTCPeerConnection {
-        return this.peerConnection;
+    getConnection(): RTCPeerConnection {
+        return this.connection;
     }
 }

@@ -4,8 +4,6 @@ import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import "../asset/profile.css";
 import { useModal } from '../context/ModalContext';
 import { useChat } from '../context/ChatContext';
-import { configCallWebSocket, getCallWebSocket } from '../util/WebSocketHelper';
-import CallModal from './CallModal';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
@@ -15,42 +13,38 @@ interface Props {
 }
 
 const WebRTC: React.FC<Props> = ({ userId, userName, userImageSrc }) => {
-    const { openTextModal, openCallModal, closeCallModal, isCallModalOpen } = useModal();
-    const { updateToUserId, updateToUserName } = useChat();
-    const myUserId = localStorage.getItem('userId');
+    const { openTextModal, openCallModal } = useModal();
+    const { updateToUserId, updateToUserName, updateToUserImageSrc, updateIsCaller } = useChat();
+    const myUserId = localStorage.getItem('userId') || "";
     const navigate = useNavigate();
-    const [callWebSocket, setCallWebSocket] = React.useState<WebSocket>();
-    const [isSelected, setIsSelected] = React.useState<boolean>();
 
-    const callUser = () => {
+    const textUser = () => {
         if (!myUserId || myUserId?.length === 0) {
             navigate("/login")
         } else {
-            const webSocket = getCallWebSocket(myUserId);
-            setCallWebSocket(webSocket);
-            configCallWebSocket(webSocket);
-            setIsSelected(true);
+            updateToUserId(userId);
+            updateToUserName(userName);
+            openTextModal();
+        }
+    }
+
+    const callUser = async () => {
+        if (!myUserId || myUserId?.length === 0) {
+            navigate("/login")
+        } else {
+            updateToUserId(userId);
+            updateToUserName(userName);
+            updateToUserImageSrc(userImageSrc);
+            updateIsCaller(true);
             openCallModal();
         }
-
-    };
-
-    const stopCall = () => {
-        if (callWebSocket) {
-            callWebSocket.close();
-        }
-        closeCallModal();
     };
 
     return (
         <div className="connect-container">
             <button
                 className="text-button"
-                onClick={() => {
-                    updateToUserId(userId);
-                    updateToUserName(userName);
-                    openTextModal(); // open message chat modal
-                }}
+                onClick={textUser}
             >
                 <IoChatboxEllipsesOutline className="text-icon" />
             </button>
@@ -59,14 +53,6 @@ const WebRTC: React.FC<Props> = ({ userId, userName, userImageSrc }) => {
                 onClick={callUser}>
                 <IoIosCall className="call-icon" />
             </button>
-            {
-                isCallModalOpen && isSelected &&
-                <CallModal
-                    userName={userName}
-                    userImageSrc={userImageSrc}
-                    onClose={stopCall}
-                />
-            }
         </div>
     );
 };

@@ -4,12 +4,13 @@ import { FaSearch } from "react-icons/fa";
 import "../asset/overview.css"
 import { useTranslation } from 'react-i18next';
 import ProfileCard from "../component/ProfileCard";
-import { getTextWebSocket } from "../util/WebSocketHelper";
+import { configCallWebSocket, getCallWebSocket, getPeerConnection, getTextWebSocket, handleOffer, listenOnCall } from "../util/WebSocketHelper";
 import { refreshToken } from "../util/AuthHelper";
 import TextModal from "../component/TextModal";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../context/ModalContext";
 import { dealWithResponseError } from "../util/ErrorHelper";
+import CallModal from "../component/CallModal";
 
 const OverviewPage: React.FC = () => {
     const { t } = useTranslation();
@@ -17,12 +18,15 @@ const OverviewPage: React.FC = () => {
     const [skillData, setSkillData] = React.useState<any[]>([]);
     const [skillResult, setSkillResult] = React.useState<any[]>([]);
     const [profileData, setProfileData] = React.useState<any[]>([]);
+
     const resultsRef = React.useRef<HTMLDivElement>(null);
     const [showProfiles, setShowProfiles] = React.useState(false);
     const userId = localStorage.getItem('userId') || '';
     const textWebSocket = getTextWebSocket(userId);
+    const callWebSocket = getCallWebSocket(userId);
+    const connection = getPeerConnection();
     const navigate = useNavigate();
-    const { isTextModalOpen, closeTextModal } = useModal();
+    const { isTextModalOpen, isCallModalOpen, closeTextModal, closeCallModal, openCallModal } = useModal();
 
     React.useEffect(() => {
         if (!userId || userId?.length === 0) {
@@ -41,6 +45,12 @@ const OverviewPage: React.FC = () => {
                 dealWithResponseError(error);
             }
         );
+
+        const setUpWebSocket = async () => {
+            configCallWebSocket(callWebSocket, connection, isCallModalOpen, openCallModal);
+        }
+        setUpWebSocket();
+
     }, [refreshToken]);
 
     const handleKeyDown = (event: any) => {
@@ -122,6 +132,14 @@ const OverviewPage: React.FC = () => {
                 <TextModal
                     onClose={closeTextModal}
                     webSocket={textWebSocket}
+                />
+            }
+            {
+                isCallModalOpen &&
+                <CallModal
+                    onClose={closeCallModal}
+                    websocket={callWebSocket}
+                    connection={connection}
                 />
             }
         </div>
