@@ -37,9 +37,12 @@ const customStyles = {
 const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
     const [localStream, setLocalStream] = React.useState<MediaStream>();
     const [remoteStream, setRemoteStream] = React.useState<MediaStream>(new MediaStream());
-    const [userInfo, setUserInfo] = React.useState<UserInfo>();
+    const myUserId = localStorage.getItem('userId') || "";
+    const myUserName = localStorage.getItem('userName') || "";
+    const myUserImgSrc = localStorage.getItem('imageUrl') || "";
     const { toUserId, toUserName, toUserImageSrc,
         updateToUserId, updateToUserName, updateToUserImageSrc, isCaller } = useChat();
+    const [userInfo, setUserInfo] = React.useState<UserInfo>();
 
     React.useEffect(() => {
         connection.ontrack = event => {
@@ -62,13 +65,13 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
     React.useEffect(() => {
         if (isCaller) {
             startCall();
-        }
-        else {
+        } else {
             joinCall();
         }
     }, [isCaller])
 
     const startCall = async () => {
+        console.log("start call");
         // get local audio stream
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         setLocalStream(stream);
@@ -79,10 +82,18 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
         // create and send offer message
         const offer = await connection.createOffer();
         await connection.setLocalDescription(offer);
-        websocket.send(JSON.stringify({ type: 'offer', offer, toUserId: userInfo?.userId }));
+        websocket.send(JSON.stringify({
+            type: 'offer',
+            offer,
+            toUserId: userInfo?.userId || toUserId,
+            fromUserId: myUserId,
+            fromUserName: myUserName,
+            fromUserImg: myUserImgSrc
+        }));
     }
 
     const joinCall = async () => {
+        console.log("join call");
         if (!localStream) {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             setLocalStream(stream);

@@ -31,7 +31,10 @@ export const configCallWebSocket = (
     webSocket: WebSocket,
     peerConnection: RTCPeerConnection,
     isCallModalOpen: boolean,
-    openCallModal: () => void
+    openCallModal: () => void,
+    updateToUserId: (userId: string) => void,
+    updateToUserName: (userName: string) => void,
+    updateToUserImageSrc: (imgUrl: string) => void
 ) => {
     webSocket.onopen = async () => {
         console.log('Call WebSocket connection established');
@@ -50,10 +53,16 @@ export const configCallWebSocket = (
         console.error('Call WebSocket error: ', error);
     };
 
-    initialCall(webSocket, peerConnection, isCallModalOpen, openCallModal);
+    initialCall(webSocket, peerConnection, isCallModalOpen, openCallModal,
+        updateToUserId, updateToUserName, updateToUserImageSrc);
 }
 
-export const initialCall = (webSocket: any, peerConnection: any, isCallModalOpen: boolean, openCallModal: any) => {
+export const initialCall = (
+    webSocket: any, peerConnection: any,
+    isCallModalOpen: boolean, openCallModal: any,
+    updateToUserId: (userId: string) => void,
+    updateToUserName: (userName: string) => void,
+    updateToUserImageSrc: (imgUrl: string) => void) => {
     webSocket.onmessage = async (event: any) => {
         const message = JSON.parse(event.data);
         switch (message.type) {
@@ -61,7 +70,8 @@ export const initialCall = (webSocket: any, peerConnection: any, isCallModalOpen
                 if (!isCallModalOpen) {
                     openCallModal();
                 }
-                await handleOffer(message.offer, message.toUserId, peerConnection, webSocket);
+                await handleOffer(message, peerConnection, webSocket,
+                    updateToUserId, updateToUserName, updateToUserImageSrc);
                 break;
             default:
                 break;
@@ -74,7 +84,7 @@ export const listenOnCall = (webSocket: any, peerConnection: any) => {
         const message = JSON.parse(event.data);
         switch (message.type) {
             case 'offer':
-                await handleOffer(message.offer, message.toUserId, peerConnection, webSocket);
+                await handleOffer(message, peerConnection, webSocket);
                 break;
             case 'answer':
                 await handleAnswer(message.answer, peerConnection);
@@ -95,29 +105,44 @@ export const getPeerConnection = () => {
     return PeerConnectionSingleton.getInstance().getConnection();
 }
 
-export const handleOffer = async (offer: any, toUserId: string,
-    peerConnection: any, callWebSocket: any) => {
+export const handleOffer = async (message: any, peerConnection: any, callWebSocket: any,
+    updateToUserId?: (userId: string) => void,
+    updateToUserName?: (userName: string) => void,
+    updateToUserImageSrc?: (imgUrl: string) => void) => {
+
+    console.log("handling offer");
     if (!peerConnection) return;
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(message?.offer));
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
+
+    if (updateToUserId && updateToUserName && updateToUserImageSrc) {
+        updateToUserId(message?.fromUserId);
+        updateToUserName(message?.fromUserName);
+        updateToUserImageSrc(message?.fromUserImg);
+    }
+
     if (callWebSocket) {
-        callWebSocket.send(JSON.stringify({ type: 'answer', answer, toUserId }));
+        // answer back by send message to where it is from
+        callWebSocket.send(JSON.stringify({ type: 'answer', answer, toUserId: message?.fromUserId }));
     }
 };
 
 export const handleAnswer = async (answer: any, peerConnection: any) => {
+    console.log("handling answer");
     if (!peerConnection) return;
     await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 };
 
 export const handleCandidate = (candidate: any, peerConnection: any) => {
+    console.log("handling candidate");
     if (!peerConnection) return;
     // find the best candidate to set up peer to peer connection
     peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
 };
 
 export const handleHangUp = (callWebSocket: any) => {
+    console.log("handling hang up");
     if (callWebSocket) {
         callWebSocket.send(JSON.stringify({ type: 'hangup' }));
     }
