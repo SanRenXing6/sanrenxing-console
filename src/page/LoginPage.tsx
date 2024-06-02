@@ -9,7 +9,6 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { toastFailure, toastSuccesss } from '../util/ToastHelper';
 import { useNavigate } from 'react-router-dom';
-import { retriveImage } from '../util/ImageHelper';
 import LoadingPage from './LoadingPage';
 import { useTranslation } from 'react-i18next';
 
@@ -56,10 +55,7 @@ const LoginPage: React.FC = () => {
                 .then(async (response) => {
                     const data = response?.data;
                     setAuthToken(data?.token);
-                    if (data?.imageId) {
-                        const imageUrl = await retriveImage(data?.imageId);
-                        localStorage.setItem('imageUrl', imageUrl);
-                    }
+                    localStorage.setItem('imageId', data?.imageId);
                     localStorage.setItem('userId', data?.userId);
                     localStorage.setItem('userName', data?.userName);
 

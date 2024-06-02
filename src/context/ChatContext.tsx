@@ -4,22 +4,26 @@ interface ChatContextType {
     isCaller: boolean;
     toUserId: string;
     toUserName: string;
-    toUserImageSrc: string;
+    toUserImageId: string; // for receiver in call modal
+    toUserImageUrl: string; // for caller in call modal
     updateIsCaller: (isCaller: boolean) => void;
     updateToUserId: (toUserId: string) => void;
     updateToUserName: (toUserName: string) => void;
-    updateToUserImageSrc: (toUserImageSrc: string) => void;
+    updateToUserImageId: (toUserImageId: string) => void;
+    updateToUserImageUrl: (toUserImageUrl: string) => void;
 }
 
 const ChatContext = createContext<ChatContextType>({
     isCaller: false,
     toUserId: "",
     toUserName: "",
-    toUserImageSrc: "",
+    toUserImageId: "",
+    toUserImageUrl: "",
     updateIsCaller: (isCaller: boolean) => { },
     updateToUserId: (userId: string) => { },
     updateToUserName: (userName: string) => { },
-    updateToUserImageSrc: (toUserImageSrc: string) => { }
+    updateToUserImageId: (toUserImageId: string) => { },
+    updateToUserImageUrl: (toUserImageUrl: string) => { }
 });
 
 interface ChatProviderProps {
@@ -31,7 +35,8 @@ export const useChat = () => useContext(ChatContext);
 export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     const [toUserId, setToUserId] = useState<string>("");
     const [toUserName, setToUserName] = useState<string>("");
-    const [toUserImageSrc, setToUserImageSrc] = useState<string>("");
+    const [toUserImageId, setToUserImageId] = useState<string>("");
+    const [toUserImageUrl, setToUserImageUrl] = useState<string>("");
     const [isCaller, setIsCaller] = useState<boolean>(false);
 
     const updateToUserId = (userId: string) => {
@@ -42,18 +47,22 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
         setToUserName(userName);
     }
 
-    const updateToUserImageSrc = (imgSrc: string) => {
-        setToUserImageSrc(imgSrc);
+    const updateToUserImageId = (imgId: string) => {
+        setToUserImageId(imgId);
     }
 
     const updateIsCaller = (isCaller: boolean) => {
         setIsCaller(isCaller)
     }
 
+    const updateToUserImageUrl = (imgUrl: string) => {
+        setToUserImageUrl(imgUrl);
+    }
+
     return (
         <ChatContext.Provider value={{
-            isCaller, toUserId, toUserName, toUserImageSrc,
-            updateIsCaller, updateToUserId, updateToUserName, updateToUserImageSrc
+            isCaller, toUserId, toUserName, toUserImageId, toUserImageUrl,
+            updateIsCaller, updateToUserId, updateToUserName, updateToUserImageId, updateToUserImageUrl
         }}>
             {children}
         </ChatContext.Provider>

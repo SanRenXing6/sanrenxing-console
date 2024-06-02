@@ -9,20 +9,21 @@ import { useTranslation } from 'react-i18next';
 import { IoMailUnreadOutline } from "react-icons/io5";
 import { useModal } from '../context/ModalContext';
 import { dealWithResponseError } from '../util/ErrorHelper';
+import { retriveImage } from '../util/ImageHelper';
 
 
 export const AppHeader: React.FC = () => {
     const { t } = useTranslation();
-    const imageUrl = localStorage.getItem('imageUrl');
     const userId = localStorage.getItem('userId');
-    const hasImage = imageUrl && imageUrl?.length > 0;
+    const imageId = localStorage.getItem('imageId');
+    const hasImage = imageId && imageId?.length > 0;
     const hasUser = userId && userId?.length > 0;
-    const image = hasImage ? imageUrl : defaultUserIcon;
     const navigate = useNavigate();
     const { openTextModal } = useModal();
     const location = useLocation();
     const isOverviewPage = location.pathname === "/overview";
     const [messages, setMessages] = React.useState<any[]>([]);
+    const [image, setImage] = React.useState<string>();
 
     React.useEffect(() => {
         if (!userId || userId?.length === 0) {
@@ -37,9 +38,20 @@ export const AppHeader: React.FC = () => {
             }).catch((error) => {
                 dealWithResponseError(error);
             });
+            if (hasImage) {
+                const fetchImageData = async () => {
+                    try {
+                        const image = await retriveImage(imageId);
+                        setImage(image);
+                    } catch (error) {
+                        console.error('Error fetching image data:', error);
+                    }
+                };
+                fetchImageData();
+            }
         }
 
-    }, [userId])
+    }, [userId, imageId])
 
     const logout = () => {
         setAuthToken('');
@@ -62,8 +74,13 @@ export const AppHeader: React.FC = () => {
                 }
                 {hasUser &&
                     <>
-                        <button className="logoutBtn" onClick={() => logout()}>{t('buttons.logOut')}</button>
-                        <img className="profileImg" src={image} alt="Loaded from server" />
+                        <button
+                            className="logoutBtn"
+                            onClick={() => logout()}>{t('buttons.logOut')}</button>
+                        <img
+                            className="profileImg"
+                            src={hasImage ? image : defaultUserIcon}
+                            alt="Loaded from server" />
                     </>
                 }
             </div>

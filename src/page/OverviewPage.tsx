@@ -28,7 +28,7 @@ const OverviewPage: React.FC = () => {
     const connection = getPeerConnection();
     const navigate = useNavigate();
     const { isTextModalOpen, isCallModalOpen, closeTextModal, closeCallModal, openCallModal } = useModal();
-    const { updateToUserId, updateToUserName, updateToUserImageSrc } = useChat();
+    const { updateToUserId, updateToUserName, updateToUserImageId } = useChat();
 
     React.useEffect(() => {
         if (!userId || userId?.length === 0) {
@@ -50,7 +50,7 @@ const OverviewPage: React.FC = () => {
 
         const setUpWebSocket = async () => {
             configCallWebSocket(callWebSocket, connection, isCallModalOpen,
-                openCallModal, updateToUserId, updateToUserName, updateToUserImageSrc);
+                openCallModal, updateToUserId, updateToUserName, updateToUserImageId);
         }
         setUpWebSocket();
 

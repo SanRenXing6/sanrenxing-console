@@ -106,11 +106,8 @@ const ProfileFormPage: React.FC = () => {
                 needs: needs,
                 skills: skills
             }
-        ).then(async () => {
-            if (hasImage) {
-                const imageUrl = await retriveImage(imageId);
-                localStorage.setItem('imageUrl', imageUrl);
-            }
+        ).then(() => {
+            localStorage.setItem('imageId', imageId);
         }).catch(error => {
             console.error(error);
         })

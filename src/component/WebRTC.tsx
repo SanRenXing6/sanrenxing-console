@@ -9,12 +9,12 @@ import { useNavigate } from 'react-router-dom';
 interface Props {
     userId: string,
     userName: string,
-    userImageSrc: any,
+    userImageUrl: any,
 }
 
-const WebRTC: React.FC<Props> = ({ userId, userName, userImageSrc }) => {
+const WebRTC: React.FC<Props> = ({ userId, userName, userImageUrl }) => {
     const { openTextModal, openCallModal } = useModal();
-    const { updateToUserId, updateToUserName, updateToUserImageSrc, updateIsCaller } = useChat();
+    const { updateToUserId, updateToUserName, updateToUserImageUrl, updateIsCaller } = useChat();
     const myUserId = localStorage.getItem('userId') || "";
     const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const WebRTC: React.FC<Props> = ({ userId, userName, userImageSrc }) => {
         } else {
             updateToUserId(userId);
             updateToUserName(userName);
-            updateToUserImageSrc(userImageSrc);
+            updateToUserImageUrl(userImageUrl);
             updateIsCaller(true);
             openCallModal();
         }

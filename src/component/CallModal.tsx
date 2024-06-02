@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import { ImPhoneHangUp } from "react-icons/im";
 import { useChat } from '../context/ChatContext';
 import { listenOnCall } from '../util/WebSocketHelper';
+import { retriveImage } from '../util/ImageHelper';
 
 interface Props {
     websocket: WebSocket,
@@ -14,7 +15,6 @@ interface Props {
 type UserInfo = {
     userId: string,
     userName: string,
-    userImageSrc: string
 }
 
 const customStyles = {
@@ -39,10 +39,11 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
     const [remoteStream, setRemoteStream] = React.useState<MediaStream>(new MediaStream());
     const myUserId = localStorage.getItem('userId') || "";
     const myUserName = localStorage.getItem('userName') || "";
-    const myUserImgSrc = localStorage.getItem('imageUrl') || "";
-    const { toUserId, toUserName, toUserImageSrc,
-        updateToUserId, updateToUserName, updateToUserImageSrc, isCaller } = useChat();
+    const myImageId = localStorage.getItem('imageId') || "";
+    const { toUserId, toUserName, toUserImageId, toUserImageUrl,
+        updateToUserId, updateToUserName, updateToUserImageId, isCaller } = useChat();
     const [userInfo, setUserInfo] = React.useState<UserInfo>();
+    const [userImageUrl, setUserImageUrl] = React.useState<string>();
 
     React.useEffect(() => {
         connection.ontrack = event => {
@@ -56,13 +57,32 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
         if (!!toUserId) {
             setUserInfo({
                 userName: toUserName,
-                userId: toUserId,
-                userImageSrc: toUserImageSrc
+                userId: toUserId
             })
         }
     }, [toUserId])
 
-    React.useEffect(() => {
+    React.useEffect(() => { // call: show image using local blob url directly
+        if (!!toUserImageUrl) {
+            setUserImageUrl(toUserImageUrl);
+        }
+    }, [toUserImageUrl])
+
+    React.useEffect(() => { // receiver: fetch image data and show image
+        if (toUserImageId && toUserImageId?.length > 0) {
+            const fetchImageData = async () => {
+                try {
+                    const image = await retriveImage(toUserImageId);
+                    setUserImageUrl(image);
+                } catch (error) {
+                    console.error('Error fetching image data:', error);
+                }
+            };
+            fetchImageData();
+        }
+    }, [toUserImageId])
+
+    React.useEffect(() => { // different use cases for caller and receiver
         if (isCaller) {
             startCall();
         } else {
@@ -88,7 +108,7 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
             toUserId: userInfo?.userId || toUserId,
             fromUserId: myUserId,
             fromUserName: myUserName,
-            fromUserImg: myUserImgSrc
+            fromUserImg: myImageId
         }));
     }
 
@@ -104,7 +124,7 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
     const endCall = () => {
         updateToUserId("");
         updateToUserName("");
-        updateToUserImageSrc("");
+        updateToUserImageId("");
         if (localStream) {
             localStream.getTracks().forEach(track => track.stop());
             setLocalStream(undefined);
@@ -115,14 +135,12 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
     return (
         <Modal
             isOpen={true}
-            onRequestClose={() => {
-                endCall();
-            }}
+            onRequestClose={endCall}
             contentLabel="Call"
             style={customStyles}
         >
             <div className="call-container">
-                <img className="profile-img" src={userInfo?.userImageSrc}></img>
+                <img className="profile-img" src={userImageUrl}></img>
                 <h5 className="calling-text">Calling {userInfo?.userName} ...</h5>
                 <audio
                     ref={audio => {
