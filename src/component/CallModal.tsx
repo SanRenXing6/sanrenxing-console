@@ -3,7 +3,7 @@ import "../asset/call.css"
 import Modal from 'react-modal';
 import { ImPhoneHangUp } from "react-icons/im";
 import { useChat } from '../context/ChatContext';
-import { listenOnCall } from '../util/WebSocketHelper';
+import { configAsCaller } from '../util/WebSocketHelper';
 import { retriveImage } from '../util/ImageHelper';
 
 interface Props {
@@ -49,8 +49,6 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
         connection.ontrack = event => {
             setRemoteStream(event.streams[0]);
         };
-
-        listenOnCall(websocket, connection);
     }, [])
 
     React.useEffect(() => {
@@ -95,6 +93,7 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
         // get local audio stream
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         setLocalStream(stream);
+        configAsCaller(websocket, connection);
 
         // add audio track to RTCPeerConnection
         stream.getTracks().forEach(track => connection.addTrack(track, stream));
@@ -113,7 +112,11 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
     }
 
     const joinCall = async () => {
-        console.log("join call");
+        if (!connection) {
+            console.error('no peer connection');
+            return;
+        }
+        console.log("joinning call");
         if (!localStream) {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             setLocalStream(stream);
@@ -128,6 +131,10 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
         if (localStream) {
             localStream.getTracks().forEach(track => track.stop());
             setLocalStream(undefined);
+        }
+        if (remoteStream) {
+            remoteStream.getTracks().forEach(track => track.stop());
+            setRemoteStream(new MediaStream());
         }
         onClose();
     };
@@ -172,3 +179,4 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
 }
 
 export default CallModal;
+

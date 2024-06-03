@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import "../asset/overview.css"
 import { useTranslation } from 'react-i18next';
 import ProfileCard from "../component/ProfileCard";
-import { configCallWebSocket, getCallWebSocket, getPeerConnection, getTextWebSocket, handleOffer, listenOnCall } from "../util/WebSocketHelper";
+import { getCallWebSocket, getTextWebSocket, configAsReceiver, getPeerConnection } from "../util/WebSocketHelper";
 import { refreshToken } from "../util/AuthHelper";
 import TextModal from "../component/TextModal";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ import CallModal from "../component/CallModal";
 import { useChat } from "../context/ChatContext";
 
 const OverviewPage: React.FC = () => {
+
     const { t } = useTranslation();
     const [inputValue, setInputValue] = React.useState("");
     const [skillData, setSkillData] = React.useState<any[]>([]);
@@ -23,9 +24,11 @@ const OverviewPage: React.FC = () => {
     const resultsRef = React.useRef<HTMLDivElement>(null);
     const [showProfiles, setShowProfiles] = React.useState(false);
     const userId = localStorage.getItem('userId') || '';
-    const textWebSocket = getTextWebSocket(userId);
-    const callWebSocket = getCallWebSocket(userId);
-    const connection = getPeerConnection();
+
+    const textWebSocket: WebSocket = getTextWebSocket(userId);
+    const callWebSocket: WebSocket = getCallWebSocket(userId);
+    const peerConnection: RTCPeerConnection = getPeerConnection();
+
     const navigate = useNavigate();
     const { isTextModalOpen, isCallModalOpen, closeTextModal, closeCallModal, openCallModal } = useModal();
     const { updateToUserId, updateToUserName, updateToUserImageId } = useChat();
@@ -49,7 +52,7 @@ const OverviewPage: React.FC = () => {
         );
 
         const setUpWebSocket = async () => {
-            configCallWebSocket(callWebSocket, connection, isCallModalOpen,
+            configAsReceiver(callWebSocket, peerConnection, isCallModalOpen,
                 openCallModal, updateToUserId, updateToUserName, updateToUserImageId);
         }
         setUpWebSocket();
@@ -142,7 +145,7 @@ const OverviewPage: React.FC = () => {
                 <CallModal
                     onClose={closeCallModal}
                     websocket={callWebSocket}
-                    connection={connection}
+                    connection={peerConnection}
                 />
             }
         </div>
