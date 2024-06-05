@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { backendEndpoint } from './EndpointHelper';
 
-axios.defaults.baseURL = `http://${backendEndpoint}:8080/api/v1`; 
+axios.defaults.baseURL = `https://${backendEndpoint}/api/v1`;
 axios.defaults.headers.post["Content-Type"] = 'application/json'
 
 export const getAuthToken = () => {
