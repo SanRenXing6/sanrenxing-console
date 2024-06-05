@@ -125,6 +125,7 @@ const CallModal: React.FC<Props> = ({ websocket, connection, onClose }) => {
     }
 
     const endCall = () => {
+        console.log("end call");
         updateToUserId("");
         updateToUserName("");
         updateToUserImageId("");

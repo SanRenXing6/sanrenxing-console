@@ -125,22 +125,26 @@ const TextModal: React.FC<Props> = ({ webSocket, onClose }) => {
     }
 
     const updateMessageList = (userKey: string, newMessage?: Message) => {
-        const updatedMessageList: MessageListType = { ...messageListData }
-        if (!updatedMessageList[userKey]) {
-            updatedMessageList[userKey] = [];
-        }
-        if (newMessage) {
-            updatedMessageList[userKey].push(newMessage);
-        }
-        setMessageListData(updatedMessageList);
+        setMessageListData(prevState => {
+            const updatedMessageList = { ...prevState }
+            if (!updatedMessageList[userKey]) {
+                updatedMessageList[userKey] = [];
+            }
+            if (newMessage) {
+                updatedMessageList[userKey].push(newMessage);
+            }
+            return updatedMessageList;
+        })
     }
 
     const bulkUpdateMessageList = (newMessages: MessageListType) => {
-        const updatedMessageList: MessageListType = { ...messageListData }
-        Object.keys(newMessages).forEach(key => {
-            updatedMessageList[key] = newMessages[key];
+        setMessageListData(prevState => {
+            const updatedMessageList: MessageListType = { ...prevState }
+            Object.keys(newMessages).forEach(key => {
+                updatedMessageList[key] = newMessages[key];
+            })
+            return updatedMessageList;
         })
-        setMessageListData(updatedMessageList);
     }
 
     const sendMessage = () => {
