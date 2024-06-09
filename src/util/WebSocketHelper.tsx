@@ -2,13 +2,13 @@ import { backendEndpoint } from "./EndpointHelper";
 
 export const getTextWebSocket = (userId: string) => {
     // use same text web socket since we send messages frequently once start chatting
-    const wsInstance = TextWebSocketSingleton.getInstance(`wss://${backendEndpoint}/api/v1/text?userId=` + userId);
+    const wsInstance = TextWebSocketSingleton.getInstance(`ws://${backendEndpoint}/api/v1/text?userId=` + userId);
     const socket = wsInstance.getSocket();
     return socket;
 }
 
 export const getCallWebSocket = (userId: string) => {
-    const wsInstance = CallWebSocketSingleton.getInstance(`wss://${backendEndpoint}/api/v1/call?userId=` + userId);
+    const wsInstance = CallWebSocketSingleton.getInstance(`ws://${backendEndpoint}/api/v1/call?userId=` + userId);
     const socket = wsInstance.getSocket();
     return socket;
 }
