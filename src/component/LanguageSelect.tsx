@@ -4,8 +4,8 @@ import i18n from '../asset/i18n';
 import '../asset/header.css';
 
 const options = [
-    { value: 'en', label: 'English' },
     { value: 'zh-CN', label: '中文' },
+    { value: 'en', label: 'English' },
 ];
 
 const LanguageSelect: React.FC = () => {
@@ -15,11 +15,13 @@ const LanguageSelect: React.FC = () => {
 
     const handleChange = (selectedOption: any) => {
         setSelectedOption(selectedOption);
-        i18n.changeLanguage(selectedOption.value)
+        console.log(selectedOption.value);
+        i18n.changeLanguage(selectedOption.value);
     };
 
     return (
         <Select
+            defaultValue={options[0]}
             value={selectedOption}
             onChange={handleChange}
             options={options}

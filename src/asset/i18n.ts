@@ -29,6 +29,7 @@ i18n
                         name: 'Name',
                         needs: 'Needs',
                         skills: 'Skills',
+                        feedbacks: 'Feedbacks',
                         rate: 'Rate',
                     },
                     buttons: {
@@ -66,6 +67,7 @@ i18n
                         name: '名字',
                         needs: '需求',
                         skills: '技能',
+                        feedbacks: '反馈',
                         rate: '评级',
                     },
                     buttons: {

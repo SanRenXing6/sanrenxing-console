@@ -8,12 +8,13 @@ import i18n from '../asset/i18n';
 import ProfileFormPage from './ProfileFormPage';
 import { ModalProvider } from '../context/ModalContext';
 import { ChatProvider } from '../context/ChatContext';
+import ProfileDetailPage from './ProfileDetailPage';
+import { DEFAULT_LANGUAGE } from '../constant';
 
 const HomePage = () => {
 
   React.useEffect(() => {
-    const language = navigator.language;
-    i18n.changeLanguage(language);
+    i18n.changeLanguage(DEFAULT_LANGUAGE);
   }, [])
 
   return (
@@ -27,7 +28,8 @@ const HomePage = () => {
                 <Route path="/" element={<Navigate replace to="/login" />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/overview" element={<OverviewPage />} />
-                <Route path="/profile" element={<ProfileFormPage />} />
+                <Route path="/profile/form" element={<ProfileFormPage />} />
+                <Route path="/profile/detail" element={<ProfileDetailPage />} />
               </Routes>
             </div>
           </ChatProvider>

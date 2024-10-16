@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import defaultUserIcon from "../asset/profile.png";
 import "../asset/profile.css";
 import { request } from "../util/AxiosHelper";
-import { retriveImage, uploadImage } from "../util/ImageHelper";
+import { uploadImage } from "../util/ImageHelper";
 import { Skill } from "../model/Skill";
 import { insert, remove } from "../util/ArrayHelper";
 import { IoAddCircleOutline, IoCloseCircleOutline } from "react-icons/io5";
