@@ -2,13 +2,12 @@ import * as React from "react";
 import { useTranslation } from "react-i18next";
 import "../asset/profile.css";
 import userProfileImg from "../asset/profile.png";
-import { request } from "../util/AxiosHelper";
 import { retriveImage } from "../util/ImageHelper";
 import { FaStar } from "react-icons/fa";
 import { getRandomInt } from "../util/NumberHelper";
-import WebRTC from "./WebRTC";
 import { refreshToken } from "../util/AuthHelper";
-import { dealWithResponseError } from "../util/ErrorHelper";
+import { useNavigate } from "react-router-dom";
+import WebRTC from "./WebRTC";
 
 interface Props {
     data: any
@@ -17,6 +16,7 @@ interface Props {
 const ProfileCard: React.FC<Props> = ({ data }) => {
     const { t } = useTranslation();
     const [userName, setUserName] = React.useState(data?.userName);
+    const navigate = useNavigate();
     const [userRate, setUserRate] = React.useState(1);
     const [imageUrl, setImageUrl] = React.useState<string>();
 
@@ -29,19 +29,6 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
     }
 
     React.useEffect(() => {
-        // TODO: clean up line 33-43 after deleting old profile data without user name
-        if (!(data?.userName)) {
-            request(
-                "GET",
-                `/users/${data?.userId}`,
-                {}
-            ).then((response) => {
-                setUserName(response?.data?.name || "user")
-            }).catch(error => {
-                dealWithResponseError(error);
-            });
-        }
-
         if (data?.imageId) {
             const fetchImageData = async () => {
                 try {
@@ -62,7 +49,11 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
     return (
         <div className="profile-card">
             <div className="profile-left">
-                <img className="profile-img" src={imageUrl || userProfileImg}></img>
+                <img className="profile-img" 
+                    src={imageUrl || userProfileImg}
+                    onClick={() => navigate("/profile/detail",
+                        { state: { imgUrl: imageUrl || userProfileImg, data: data } })}>
+                    </img>
                 <WebRTC
                     userId={data?.userId}
                     userName={userName}
@@ -73,10 +64,9 @@ const ProfileCard: React.FC<Props> = ({ data }) => {
                 </div>
             </div>
             <div className="profile-right">
-                <div className="profile-name">{userName}</div>
+                <div className="profile-name">{data?.userName}</div>
+                <br />
                 <div className="profile-description">{data?.description}</div>
-                <div className="profile-card-label">{t('labels.needs')}</div>
-                <div className="profile-needs">{data?.needs}</div>
                 <div className="profile-card-label">{t('labels.skills')}</div>
                 {
                     data?.skills?.map((skill: any, id: any) => {

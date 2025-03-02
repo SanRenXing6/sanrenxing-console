@@ -63,7 +63,7 @@ const LoginPage: React.FC = () => {
                     if (data?.profileId && data?.profileId.length > 0) {
                         navigate('/overview');
                     } else {
-                        navigate('/profile', { state: { userId: data?.userId, userName: data?.userName, email: email } });
+                        navigate('/profile/form', { state: { userId: data?.userId, userName: data?.userName, email: email } });
                     }
                 }).catch((error) => {
                     setIsLoading(false);

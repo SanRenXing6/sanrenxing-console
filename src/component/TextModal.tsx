@@ -125,12 +125,13 @@ const TextModal: React.FC<Props> = ({ webSocket, onClose }) => {
     }
 
     const updateMessageList = (userKey: string, newMessage?: Message) => {
+        if (newMessage==undefined) return;
         setMessageListData(prevState => {
             const updatedMessageList = { ...prevState }
             if (!updatedMessageList[userKey]) {
                 updatedMessageList[userKey] = [];
             }
-            if (newMessage) {
+            if (!updatedMessageList[userKey].includes(newMessage)) {
                 updatedMessageList[userKey].push(newMessage);
             }
             return updatedMessageList;

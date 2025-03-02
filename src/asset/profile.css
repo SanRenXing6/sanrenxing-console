@@ -197,7 +197,8 @@
 .profile-left {
     display: flex;
     flex-direction: column;
-    align-self: flex-start;
+    align-self: center;
+    align-items: center;
     overflow: hidden;
     background-color: white;
 }
@@ -206,6 +207,7 @@
     display: flex;
     width: 100px;
     height: 100px;
+    margin-bottom: 20px;
     border-radius: 50%;
 }
 
@@ -213,7 +215,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     color: rgb(76, 147, 150);
 }
 
@@ -298,16 +300,109 @@
     font-size: 0.8rem;
     margin-top: 10px;
     justify-content: flex-start;
+    font-weight: bold;
 }
 
 .profile-skill-name {
     display: flex;
-    font-size: 0.6rem;
+    margin-top: 5px;
+    font-size: 0.7rem;
     justify-content: flex-start;
 }
 
 .profile-needs {
     display: flex;
     font-size: 0.6rem;
-    justify-content: flex-start;
+    justify-self: flex-start;
+    text-align: left;
+}
+
+.profile-detail-page {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 600px;
+    overflow: auto;
+    border: 2px solid rgb(76, 147, 150);
+    border-radius: 10px;
+}
+
+.profile-detail-top {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    width: 90%;
+    height: 200px;
+    margin-bottom: 10px;
+    align-items: center;
+    overflow: hidden;
+}
+
+.profile-detail-top-img {
+    display: flex;
+    align-self: center;
+    padding: 10px;
+    justify-self: flex-start;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+}
+
+.profile-detail-top-metadata {
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    align-self: center;
+    justify-self: flex-start;
+}
+
+.profile-detail-name {
+    font-size: 1.5rem;
+    align-self: flex-start;
+    font-weight: bold;
+}
+
+.profile-datail-description {
+    font-size: 1.0rem;
+    align-self: flex-start;
+    font-style: italic;
+}
+
+.profile-detail-bottom {
+    display: flex;
+    flex-direction: column;
+    margin: 50px;
+    width: 90%;
+    height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.profile-detail-label {
+    display: flex;
+    align-self: flex-start;
+    justify-self: flex-start;
+    margin: 10px;
+    font-weight: bold;
+    font-size: 1.0rem;
+}
+
+.profile-detail-skill-list {
+    display: flex;
+    padding-left: 30px;
+    font-size: 1.0rem;
+}
+
+.profile-detail-need {
+    display: flex;
+    justify-self: flex-start;
+    padding-left: 20px;
+    font-size: 1.0rem;
+}
+
+.profile-detail-feedback {
+    display: flex;
 }
